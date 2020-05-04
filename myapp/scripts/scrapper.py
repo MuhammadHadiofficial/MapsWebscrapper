@@ -24,8 +24,8 @@ def getData(businessname,city,country,id):
     chrome_options.add_argument("--disable-dev-shm-usage");
     # chrome_options.add_argument('--headless')
 
-    # driver = webdriver.Chrome(options=chrome_options,)
-    driver = webdriver.Chrome(options=chrome_options,executable_path='./myapp/scripts/chromedriver')
+    driver = webdriver.Chrome(options=chrome_options,)
+    # driver = webdriver.Chrome(options=chrome_options,executable_path='./myapp/scripts/chromedriver')
     begin_time = datetime.now()
 
     driver.get("https://www.google.com/maps/")
@@ -76,7 +76,6 @@ def getData(businessname,city,country,id):
 
         sleep(5)
         try:
-
             ad = data_div.find_element_by_id('section-no-result-title')
             break;
         except:
