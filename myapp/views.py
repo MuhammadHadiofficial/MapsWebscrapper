@@ -101,11 +101,11 @@ def charge(request):
             print(request.session['payment'])
             return render(request,'success.html', context={'url':charge.receipt_url});
         else:
-            return render(request, 'payment.html',context={'msg':'Failed! there was a problem with your payment. Retry!'})
+            return render(request, 'payment.html',context={'msg':'Failed! there was a problem with your payment. Retry!','charge':int((int(request.session['total'])*20)/100)})
 
     else:
         print("hell")
-        return render(request, 'payment.html')
+        return render(request, 'payment.html',context={'charge':int((int(request.session['total'])*20)/100)})
 def successMsg(request,args):
     if ('filepath' in request.session.keys() and request.session['payment'] == 'yes'):
 
