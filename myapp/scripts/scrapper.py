@@ -22,10 +22,10 @@ def getData(businessname,city,country,id):
 
     chrome_options.add_argument("--no-sandbox");
     chrome_options.add_argument("--disable-dev-shm-usage");
-    # chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--headless')
 
-    driver = webdriver.Chrome(options=chrome_options,)
-    # driver = webdriver.Chrome(options=chrome_options,executable_path='./myapp/scripts/chromedriver')
+    # driver = webdriver.Chrome(options=chrome_options,)
+    driver = webdriver.Chrome(options=chrome_options,executable_path='./myapp/scripts/chromedriver')
     begin_time = datetime.now()
 
     driver.get("https://www.google.com/maps/")
@@ -103,7 +103,7 @@ def getData(businessname,city,country,id):
         else:
             print('clicked')
             btn=driver.find_element_by_id('n7lv7yjyC35__section-pagination-button-next')
-            btn.click();
+
             driver.execute_script("arguments[0].click();", btn)
     dataFrame = pd.DataFrame(d, columns=(
         'Firmenname / COMPANY NAME', 'rating', 'reviews', 'Branche / INDUSTRY','Strasse / Street' ,'Stadt / City','Land / COUNTRY', 'opening_hours', 'phone_number', 'website'))
