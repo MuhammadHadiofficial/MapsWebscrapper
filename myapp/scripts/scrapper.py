@@ -20,7 +20,7 @@ def getData(businessname,city,country,id):
     # https://www.yellowpages.com/search?search_terms=salon&geo_location_terms=Berlin
 
     check_next = True
-    url = "https://www.gelbeseiten.de/Suche/Textilwaren/Berlin?umkreis=50000"
+    url = "https://www.gelbeseiten.de/Suche/"+keyword+"/"+city+"?umkreis=50000"
     while check_next:
         results = requests.get(url)
         print(results.status_code)
