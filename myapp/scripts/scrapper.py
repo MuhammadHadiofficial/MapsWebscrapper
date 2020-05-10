@@ -24,7 +24,9 @@ def getData(businessname,city,country,id):
 
     check_next = True
     url = "https://www.gelbeseiten.de/Suche/"+keyword+"/"+city+"?umkreis=50000"
+    # results=''
     while check_next:
+
         try:
             print('he')
             results = requests.get(url)
