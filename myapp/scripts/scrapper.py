@@ -7,6 +7,9 @@ from bs4 import BeautifulSoup
 import pandas as pd
 from time import sleep
 
+from urllib3.exceptions import MaxRetryError
+
+
 def getData(businessname,city,country,id):
 
     begin_time = datetime.now()
@@ -22,7 +25,18 @@ def getData(businessname,city,country,id):
     check_next = True
     url = "https://www.gelbeseiten.de/Suche/"+keyword+"/"+city+"?umkreis=50000"
     while check_next:
-        results = requests.get(url)
+        try:
+            print('he')
+            results = requests.get(url)
+            print(url)
+        except requests.exceptions.ConnectionError:
+            # sleep(2)
+            print('jell')
+            # continue
+        except MaxRetryError:
+            # sleep(2)
+            print('jell')
+            # continue
         print(results.status_code)
         c = results.content
         # from bs4 import BeautifulSoup
@@ -38,8 +52,8 @@ def getData(businessname,city,country,id):
             if (rating):
                 rating=rating[0].get_text().strip()
             desc = s.findAll('div', {"class": "mod-Treffer__freitext"})
-            if (desc):
-                print(desc[0].get_text().strip())
+            # if (desc):
+                # print(desc[0].get_text().strip())
             address = s.findAll('address', {"class": "mod mod-AdresseKompakt"})
 
             if (address):
@@ -71,11 +85,21 @@ def getData(businessname,city,country,id):
                     # print(status[0].findAll('span')[0].get_text())
                     hours=status[0].findAll('span', {"class": 'nobr'})[0].get_text()
             print(hours)
+            address1=''
+            address2=''
             try:
-                business=Business(keyword=keyword,name=name,rating=rating,industry=type,street=" ".join(address[0].split()),postalcode=address[1].split()[0],city=city,country=country,opening_hours=hours,phone_number=phone_number,website=weblink,email=email,)
+                address1 = " ".join(address[0].split())
+            except IndexError:
+                pass
+            try:
+                address1 = " ".join(address[1].split())
+            except IndexError:
+                pass
+            try:
+                business=Business(keyword=keyword,name=name,rating=rating,industry=type,street=address1,postalcode=address2,city=city,country=country,opening_hours=hours,phone_number=phone_number,website=weblink,email=email,)
                 business.save()
                 print(hours)
-                d.append((name, rating, type," ".join(address[0].split()),address[1].split()[0],city,country,hours, phone_number, weblink,email))
+                d.append((name, rating, type,address1,address2,city,country,hours, phone_number, weblink,email))
                 total=total+1
             except IntegrityError as e:
                 print('duplicate')
