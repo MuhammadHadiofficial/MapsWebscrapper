@@ -272,7 +272,7 @@ if(data.msg=='success'){
   <!-- Actual search box -->
 
      <div class="input-group-prepend search_icon_result"  style="text-align: center">
-   <i class="bx bx-store icon-store "></i> <span style="margin: auto 0">Status</span>
+   <i class="bx bx-store icon-store " style="padding: 7px;"></i> <span style="margin: auto 0">Status</span>
     </div>
         <p id="success_msg" style="color: white; padding: 10px;  font-size: 24px; font-weight: bold; ">${data.msg}</p>
 
@@ -280,7 +280,7 @@ if(data.msg=='success'){
     <div class="col-md-2 offset-md-1">
   <!-- Actual search box -->
        <div class="input-group-prepend search_icon_result" style="text-align: center">
-   <i class="bx bxs-city " ></i> Total
+   <i class="bx bxs-city style="padding: 7px;"" ></i> Total
     </div>
         <p id="total" style="color: white; padding: 10px; font-size: 24px; font-weight: bold; padding-left: 20px">${data.count}</p>
 
