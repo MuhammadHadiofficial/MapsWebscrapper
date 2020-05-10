@@ -974,6 +974,10 @@ section {
 .search_icon_control{
   background-color: white;  border-top-left-radius: 5px; border-bottom-left-radius: 5px; vertical-align: center; font-size: 1.8em; color: #007ec4;
 }
+.search_icon_result{
+  background-color: white;  border-radius: 5px;  vertical-align: center; font-size: 1.8em; color: #007ec4;
+}
+
 .input_box_custom{
   color: #007ec4 !important;
 

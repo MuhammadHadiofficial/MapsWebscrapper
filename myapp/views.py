@@ -4,7 +4,7 @@ from .scripts import scrapper
 import uuid
 import pandas as pd
 import stripe
-
+from .models import Business
 stripe.api_key='sk_test_TggFaJ2qeD6vxBQAIxetAFnO00d8P2tsGp'
 def index(request):
     # for sesskey in request.session.keys():
@@ -42,8 +42,42 @@ def getData(request):
     request.session.flush();
     if(request.method=='POST' and request.is_ajax()):
         id = str(uuid.uuid1())
-        file=scrapper.getData(request.POST.get('product'), request.POST.get('city'), 'Germany', id)
-        print(id)
+        data=  Business.objects.filter(keyword=str(request.POST.get('product')).lower().strip(),city= str(request.POST.get('city')).lower().strip(),country='Germany').order_by('name')
+        if(data.count()>10):
+            print(data)
+            filename = './' + id + '.csv';
+            df = []
+            for d in data:
+                name=d.name
+                rating=d.rating;
+                reviews=d.reviews;
+                details=d.industry
+                location=d.street
+                city=d.city
+                country=d.country
+                openinghours=d.opening_hours;
+                phonenumber=d.phone_number;
+                weblink=d.website;
+                email=d.email
+                postalCode=d.postalcode
+                df.append((name,rating,details,location,postalCode,city,country,openinghours,phonenumber,weblink,email))
+            dataFrame = pd.DataFrame(df, columns=(
+                'Firmenname / COMPANY NAME', 'rating', 'Branche / INDUSTRY', 'Strasse / Street',"PostalCode",
+                'Stadt / City', 'Land / COUNTRY', 'HOURS', 'phone_number', 'website','email'))
+
+            dataFrame.to_csv(filename)
+
+            request.session['id'] = id;
+            request.session['filepath'] = filename
+            request.session['payment'] = 'no';
+            request.session['total'] = data.count()
+            return JsonResponse({'msg': 'success', 'id': id, 'count': data.count()});
+
+        # else:
+            # return JsonResponse({'msg': 'failed', 'count': 0})
+
+        file=scrapper.getData(str(request.POST.get('product')).lower(), str(request.POST.get('city')).lower(), 'Germany', id)
+        # print(id)
         # print(request.session)
         if(file['total'] == 0):
             return JsonResponse({'msg': 'failed', 'count': file['total']})
@@ -68,9 +102,10 @@ def getFile(request):
     else:
         redirect('non/2')
 def getPay(request):
+        print(request.session['payment'])
         if( 'id' in request.session.keys() and   'filepath' in request.session.keys() and request.session['payment']!='yes'):
             print(request.session.keys())
-            return render(request,'payment.html',context={'charge':int((int(request.session['total'])*20)/100)})
+            return render(request,'payment.html',context={'charge':int((int(request.session['total'])*20)/100),'total':int(request.session['total'])})
         else:
             return    redirect('non/2')
 def charge(request):
@@ -79,7 +114,7 @@ def charge(request):
     if(request.method=='POST' and 'filepath' in request.session.keys() and request.session['payment']!='yes'):
         customer=  stripe.Customer.create(
             email=request.POST['email'],
-            name=request.POST['nickname'],
+            name=request.POST['name'],
             source=request.POST['stripeToken']
         )
         charge=stripe.Charge.create(
@@ -96,7 +131,6 @@ def charge(request):
         # paid
         print(charge)
         if(charge.paid):
-
             request.session['payment']='yes'
             print(request.session['payment'])
             return render(request,'success.html', context={'url':charge.receipt_url});
