@@ -1,5 +1,7 @@
-selenium
+
 pandas
 django-cors-headers
 stripe
 django
+bs4
+paypalrestsdk

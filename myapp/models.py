@@ -9,7 +9,9 @@ class Business(models.Model):
     reviews = models.CharField('reviews',blank=True,max_length=255,null=True)
     industry = models.CharField(blank=True,max_length=255,null=True)
     street = models.CharField(blank=True,max_length=255,null=True)
+    street_number = models.CharField(blank=True,max_length=255,null=True)
     postalcode = models.CharField(blank=True,max_length=255,null=True)
+    area = models.CharField(blank=True,max_length=255,null=True)
 
     city=models.CharField(blank=True,max_length=255,null=True)
     country=models.CharField(blank=True,max_length=255,null=True)

@@ -152,12 +152,11 @@
   // jQuery counterUp
   $('[data-toggle="counter-up"]').counterUp({
     delay: 10,
-    time: 1000
+    time: 600
   });
 
   // Initiate venobox lightbox
   $(document).ready(function() {
-      console.log("e")
 
       function getCookie(name) {
     var cookieValue = null;
@@ -187,6 +186,9 @@ $.ajaxSetup({
     }
 });
     $('.venobox').venobox();
+document.getElementById('customRange3').addEventListener('input',(e)=>{
+    document.getElementById("radiusText").innerText=e.target.value
+})
 
       document.getElementById('product_input').addEventListener('keypress',(e)=>{
 
@@ -209,145 +211,264 @@ $.ajaxSetup({
       })
 
       document.getElementById('submit_button').addEventListener('click',()=>{
+
+var modalbody=document.getElementById('modal-body');
+     modalbody.innerHTML=`
+     <div class="row">
+
+we can give you this information
+</div>
+        <div class="row">
+          <div class="col-4 ">
+            <div class="text-left">
+
+            <h5 id="total-count" data-toggle="counter-up1"  style="display: inline;font-size: 60px;font-weight: bold">1000</h5>
+              <i class="fas icofont-location-pin fa-3x"></i>
+            <div><h4>Records</h4></div>
+                    <div><h4 id="business-type">Kosmetikstudios</h4></div>
+                    <div><h4 id="business-city">Berlin</h4></div>
+                    <div><h4 id="business-radius" style="display:inline;">0</h4>km Radius</div>
+            </div>
+
+          </div>
+
+          <div class="col-7 offset-1">
+<div class="row">
+  <div class="col-6">
+                <div class="count-box">
+<i class="icofont-ui-rating"></i>
+              <span data-toggle="counter-up6">232</span>
+              <p>Ratings</p>
+            </div>
+
+  </div>  <div class="col-6">
+                <div class="count-box">
+              <i class="icofont-id-card"></i>
+              <span data-toggle="counter-up3">232</span>
+              <p>Phone Numbers</p>
+            </div>
+
+  </div>
+</div>
+<div class="row">
+  <div class="col-6">
+               <div class="count-box">
+<i class="icofont-ui-email"></i>
+              <span data-toggle="counter-up4">232</span>
+              <p>Emails</p>
+            </div>
+
+  </div>
+  <div class="col-6">
+                <div class="count-box">
+<i class="icofont-web"></i>
+              <span data-toggle="counter-up3">232</span>
+              <p>Websites</p>
+            </div>
+
+  </div>
+</div>
+<div class="row">
+  <div class="col-6">
+                <div class="count-box">
+<i class="icofont-bank-alt"></i>
+              <span data-toggle="counter-up2">232</span>
+              <p>Company Names</p>
+            </div>
+
+  </div>
+  <div class="col-6">
+                <div class="count-box"><i class="icofont-envelope-open"></i>
+              <span data-toggle="counter-up5">232</span>
+              <p>Postal Codes</p>
+            </div>
+
+  </div>
+</div>
+  </div>
+</div>
+
+     `;
+
         var product= document.getElementById('product_input').value;
 var city= document.getElementById('city_input').value;
-console.log(product,city)
-var loader=  document.createElement('div');
-     loader.id='preloader';
-     var text=document.createElement('p');
-     text.id='loader_text'
-     text.innerText="It might take less than 1 min";
-     loader.append(text)
-         $('body').append(loader)
+var radius=document.getElementById('customRange3').value;
 
-var result_div_container=document.getElementById('result_div');
-     result_div_container.innerHTML='';
+document.getElementById('business-type').innerHTML=product
+          document.getElementById('business-city').innerHTML=city
+          document.getElementById('business-radius').innerHTML=radius
+console.log(product,city,radius)
+$('[data-toggle="counter-up1"]').counterUp({
+    delay: 100,
+    time: 900000
+  });
+
+    $('[data-toggle="counter-up2"]').counterUp({
+    delay: 200,
+    time: 600000
+  });
+      $('[data-toggle="counter-up3"]').counterUp({
+    delay: 200,
+    time: 40000
+  });
+        $('[data-toggle="counter-up4"]').counterUp({
+    delay: 200,
+    time: 370000
+  });  $('[data-toggle="counter-up5"]').counterUp({
+    delay: 200,
+    time: 700000
+  });
+  $('[data-toggle="counter-up6"]').counterUp({
+    delay: 200,
+    time: 700000
+  });
  $.ajax({
         url: 'data/',
-        data: {'product':product,'city':city,country:'germany'},
+        data: {'product':product,'city':city,country:'germany','radius':radius},
         dataType: 'json',
      method:'post',
      error:function(err){
-var result_div_container=document.getElementById('result_div');
 
-       console.log(err)
+
+
   var div=`           <div class="form-group col-12" style="background-color: white">
             <hr>
    </div>
 <div class="row" style="text-align: center" >
-  <div class="container" style="color: white;z-index: 9999">
-   <h3 > Server Not Responding Try Again in few moments</h3>
+  <div class="container" style="color: rgba(1, 3, 111, 0.8);z-index: 9999">
+   <h3 > There is a problem with server! Try again in a few moments!</h3>
   
 
-  <button  id="reset_button" class="btn btn-success" >   <i class="bx bx-trash-alt " style="padding:5px; font-size: 24px"></i></button>
+  <button data-toggle="modal" data-target="#modalAbandonedCart"  id="reset_button" class="btn btn-success" >   <i class="bx bx-trash-alt " style="padding:5px; font-size: 24px"></i> Cancel</button>
   
 </div>
 </div>
 `;
 
-    result_div_container.innerHTML=div;
+    modalbody.innerHTML=div;
 
-   if ($('#preloader').length) {
-      $('#preloader').delay(100).fadeOut('slow', function() {
-        $(this).remove();
-      });
-    }
      },
         success: function (data) {
-console.log(data)
-var result_div_container=document.getElementById('result_div');
+
+
+
 if(data.msg=='success'){
-    var div=`<div class="form-group col-12" style="background-color: white">
-            <hr>
-   </div>
-<div class="row" data-aos="zoom-in"  style="text-align: center" >
 
-  <div class="container" style="color: white">
+var radius=document.getElementById('customRange3').value;
+         modalbody.innerHTML=`
+     <div class="row">
+
+we can give you this information
+</div>
+        <div class="row">
+          <div class="col-4 ">
+            <div class="text-left">
+
+            <h5 id="total-count"  data-toggle="counter-up8" style="display: inline;font-size: 60px;font-weight: bold">100</h5>
+              <i class="fas icofont-location-pin fa-3x"></i>
+              
+            <div><h4>Records</h4></div>
+                    <div><h4 id="business-type">Kosmetikstudios</h4></div>
+                    <div><h4 id="business-city">Berlin</h4></div>
+                    <div><h4 id="business-radius" style="display: inline">${radius}</h4>km Radius</div>
+            </div>
+
+          </div>
+
+          <div class="col-7 offset-1">
 <div class="row">
-  <div class="col-md-4 ">
-    <p><img   src="{% static 'myapp/assets/icon-suche.svg' %}"  class="testimonial-search-img" alt=""></p>
-    <h4 class="text-light">B2B Search Results</h4>
-  </div>
-  <div class="col-md-2">
-  <!-- Actual search box -->
+  <div class="col-6">
+                <div class="count-box">
+<i class="icofont-ui-rating"></i>
+              <span data-toggle="counter-up3">${data.rating_count}</span>
+              <p>Ratings</p>
+            </div>
 
-     <div class="input-group-prepend search_icon_result"  style="text-align: center">
-   <i class="bx bx-store icon-store " style="padding: 7px;"></i> <span style="margin: auto 0">Status</span>
-    </div>
-        <p id="success_msg" style="color: white; padding: 10px;  font-size: 24px; font-weight: bold; ">${data.msg}</p>
-
-  </div>
-    <div class="col-md-2 offset-md-1">
-  <!-- Actual search box -->
-       <div class="input-group-prepend search_icon_result" style="text-align: center">
-   <i class="bx bxs-city" style="padding: 7px;" ></i> Total
-    </div>
-        <p id="total" style="color: white; padding: 10px; font-size: 24px; font-weight: bold; padding-left: 20px">${data.count}</p>
+  </div>  <div class="col-6">
+                <div class="count-box">
+              <i class="icofont-id-card"></i>
+              <span data-toggle="counter-up4">${data.phone_count}</span>
+              <p>Phone Numbers</p>
+            </div>
 
   </div>
-  
-    <div class="col-md-1">
-<a href="/pay" id="reset_button" class="btn btn-success" >   <i class="bx bx-shopping-bag " style="padding:5px; font-size: 24px"></i></a>
-    </div>
+</div>
+<div class="row">
+  <div class="col-6">
+                <div class="count-box">
+                <i class="icofont-ui-email"></i>
+              <span data-toggle="counter-up5">${data.email_count}</span>
+              <p>Emails</p>
+            </div>
+
+  </div>
+  <div class="col-6">
+                <div class="count-box"><i class="icofont-web"></i>
+              <span data-toggle="counter-up2">${data.website_count}</span>
+              <p>Websites</p>
+            </div>
+
   </div>
 </div>
+<div class="row">
+  <div class="col-6">
+                <div class="count-box"><i class="icofont-bank-alt"></i>
+              <span data-toggle="counter-up2">${data.name_count}</span>
+              <p>Company Names</p>
+            </div>
+
+  </div>
+  <div class="col-6">
+                <div class="count-box"><i class="icofont-envelope-open"></i>
+              <span data-toggle="counter-up3">${data.postalCode_count}</span>
+              <p>Postal Codes</p>
+            </div>
+
+  </div>
 </div>
+  </div>
 </div>
-`;
-    result_div_container.innerHTML=div;
-   if ($('#preloader').length) {
-      $('#preloader').delay(100).fadeOut('slow', function() {
-        $(this).remove();
-      });
-    }
+      <div class="modal-footer justify-content-center">
+        <a href="pay" type="button" class="btn F" style="background: rgba(1, 3, 111, 0.8);">Go to cart</a>
+        <a type="button" class="btn btn-outline-info waves-effect" data-dismiss="modal">Cancel</a>
+      </div>
+
+     `;
+  $('[data-toggle="counter-up8"]').counterUp({
+    delay: 5,
+    time: 100
+  });
+
+  // $('[data-toggle="counter-up1"]').counterUp({
+  //   delay: 200,
+  //   time: 100
+  // });
+
+    document.getElementById('total-count').innerHTML=data.count;
+
+
 
 }else{
 
-   if ($('#preloader').length) {
-      $('#preloader').delay(100).fadeOut('slow', function() {
-        $(this).remove();
-      });
-    }
-      var div=`<div class="form-group col-12" style="background-color: white">
+  var div=`           <div class="form-group col-12" style="background-color: white">
             <hr>
    </div>
-<div class="row" data-aos="zoom-in"  style="text-align: center" >
-
-  <div class="container" style="color: white">
-
-<div class="row">
-
-  <div class="col-md-4">
-    <p><img   src="{% static 'myapp/assets/icon-suche.svg' %}"  class="testimonial-search-img" alt=""></p>
-    <h4 class="text-light">B2B Search Results</h4>
-  </div>
-  <div class="col-md-2">
-  <!-- Actual search box -->
-
-     <div class="input-group-prepend search_icon_result"  style="text-align: center">
-   <i class="bx bx-store icon-store "></i> <span style="margin: auto 0">Status</span>
-    </div>
-        <p id="success_msg" style="color: white; padding: 10px;  font-size: 24px; font-weight: bold; ">${data.msg}</p>
-
-  </div>
-    <div class="col-md-2 offset-md-1">
-  <!-- Actual search box -->
-       <div class="input-group-prepend search_icon_result" style="text-align: center">
-   <i class="bx bxs-city " ></i> Total
-    </div>
-        <p id="total" style="color: white; padding: 10px; font-size: 24px; font-weight: bold; padding-left: 20px">${data.count}</p>
-
-  </div>
+<div class="row" style="text-align: center" >
+  <div class="container" style="color: rgba(1, 3, 111, 0.8);z-index: 9999">
+   <h3 > Found 0 results matching your search!</h3>
   
-  </div>
-</div>
+
+  <button data-toggle="modal" data-target="#modalAbandonedCart"  id="reset_button" class="btn btn-success" >   <i class="bx bx-trash-alt " style="padding:5px; font-size: 24px"></i> Cancel</button>
+  
 </div>
 </div>
 `;
 
+    modalbody.innerHTML=div;
 
-    result_div_container.innerHTML=div;
-}
+
+
+  }
 
         },
 
@@ -379,27 +500,27 @@ if(data.msg=='success'){
  $( function() {
     var availableTags =
 [
-  "Aach (BW)",
-  "Aachen (NW)",
-  "Aalen (BW)",
+  "Aach",
+  "Aachen",
+  "Aalen  ",
   "Abenberg (BY)",
   "Abensberg (BY)",
-  "Achern (BW)",
+  "Achern  ",
   "Achim (NI)",
-  "Adelsheim (BW)",
+  "Adelsheim  ",
   "Adenau (RP)",
   "Adorf/Vogtl. (SN)",
   "Ahaus (NW)",
   "Ahlen (NW)",
   "Ahrensburg (SH)",
   "Aichach (BY)",
-  "Aichtal (BW)",
+  "Aichtal  ",
   "Aken (Elbe) (ST)",
-  "Albstadt (BW)",
+  "Albstadt  ",
   "Alfeld (Leine) (NI)",
   "Allendorf (Lumda) (HE)",
   "Allstedt (ST)",
-  "Alpirsbach (BW)",
+  "Alpirsbach  ",
   "Alsdorf (NW)",
   "Alsfeld (HE)",
   "Alsleben (Saale) (ST)",
@@ -408,7 +529,7 @@ if(data.msg=='success'){
   "Altenberg (SN)",
   "Altenburg (TH)",
   "Altenkirchen (Westerwald) (RP)",
-  "Altensteig (BW)",
+  "Altensteig  ",
   "Altentreptow (MV)",
   "Altlandsberg (BB)",
   "Altötting (BY)",
@@ -436,7 +557,7 @@ if(data.msg=='success'){
   "Arzberg (BY)",
   "Aschaffenburg (BY)",
   "Aschersleben (ST)",
-  "Asperg (BW)",
+  "Asperg  ",
   "Aßlar (HE)",
   "Attendorn (NW)",
   "Aub (BY)",
@@ -445,12 +566,12 @@ if(data.msg=='success'){
   "Auerbach/Vogtl. (SN)",
   "Augsburg (BY)",
   "Augustusburg (SN)",
-  "Aulendorf (BW)",
+  "Aulendorf  ",
   "Auma-Weidatal (TH)",
   "Aurich (NI)",
   "Babenhausen (HE)",
   "Bacharach (RP)",
-  "Backnang (BW)",
+  "Backnang  ",
   "Bad Aibling (BY)",
   "Bad Arolsen (HE)",
   "Bad Belzig (BB)",
@@ -465,7 +586,7 @@ if(data.msg=='success'){
   "Bad Bramstedt (SH)",
   "Bad Breisig (RP)",
   "Bad Brückenau (BY)",
-  "Bad Buchau (BW)",
+  "Bad Buchau  ",
   "Bad Camberg (HE)",
   "Bad Colberg-Heldburg (TH)",
   "Bad Doberan (MV)",
@@ -473,19 +594,19 @@ if(data.msg=='success'){
   "Bad Düben (SN)",
   "Bad Dürkheim (RP)",
   "Bad Dürrenberg (ST)",
-  "Bad Dürrheim (BW)",
+  "Bad Dürrheim  ",
   "Bad Elster (SN)",
   "Bad Ems (RP)",
-  "Baden-Baden (BW)",
+  "Baden-Baden  ",
   "Bad Fallingbostel (NI)",
   "Bad Frankenhausen/Kyffhäuser (TH)",
   "Bad Freienwalde (Oder) (BB)",
-  "Bad Friedrichshall (BW)",
+  "Bad Friedrichshall  ",
   "Bad Gandersheim (NI)",
   "Bad Gottleuba-Berggießhübel (SN)",
   "Bad Griesbach im Rottal (BY)",
   "Bad Harzburg (NI)",
-  "Bad Herrenalb (BW)",
+  "Bad Herrenalb  ",
   "Bad Hersfeld (HE)",
   "Bad Homburg vor der Höhe (HE)",
   "Bad Honnef (NW)",
@@ -498,7 +619,7 @@ if(data.msg=='success'){
   "Bad Köstritz (TH)",
   "Bad Kötzting (BY)",
   "Bad Kreuznach (RP)",
-  "Bad Krozingen (BW)",
+  "Bad Krozingen  ",
   "Bad Laasphe (NW)",
   "Bad Langensalza (TH)",
   "Bad Lauchstädt (ST)",
@@ -506,11 +627,11 @@ if(data.msg=='success'){
   "Bad Lauterberg im Harz (NI)",
   "Bad Liebenstein (TH)",
   "Bad Liebenwerda (BB)",
-  "Bad Liebenzell (BW)",
+  "Bad Liebenzell  ",
   "Bad Lippspringe (NW)",
   "Bad Lobenstein (TH)",
   "Bad Marienberg (Westerwald) (RP)",
-  "Bad Mergentheim (BW)",
+  "Bad Mergentheim  ",
   "Bad Münder am Deister (NI)",
   "Bad Münstereifel (NW)",
   "Bad Muskau (SN)",
@@ -522,18 +643,18 @@ if(data.msg=='success'){
   "Bad Oldesloe (SH)",
   "Bad Orb (HE)",
   "Bad Pyrmont (NI)",
-  "Bad Rappenau (BW)",
+  "Bad Rappenau  ",
   "Bad Reichenhall (BY)",
   "Bad Rodach (BY)",
   "Bad Sachsa (NI)",
-  "Bad Säckingen (BW)",
+  "Bad Säckingen  ",
   "Bad Salzdetfurth (NI)",
   "Bad Salzuflen (NW)",
   "Bad Salzungen (TH)",
-  "Bad Saulgau (BW)",
+  "Bad Saulgau  ",
   "Bad Schandau (SN)",
   "Bad Schmiedeberg (ST)",
-  "Bad Schussenried (BW)",
+  "Bad Schussenried  ",
   "Bad Schwalbach (HE)",
   "Bad Schwartau (SH)",
   "Bad Segeberg (SH)",
@@ -544,23 +665,23 @@ if(data.msg=='success'){
   "Bad Staffelstein (BY)",
   "Bad Sulza (TH)",
   "Bad Sülze (MV)",
-  "Bad Teinach-Zavelstein (BW)",
+  "Bad Teinach-Zavelstein  ",
   "Bad Tennstedt (TH)",
   "Bad Tölz (BY)",
-  "Bad Urach (BW)",
+  "Bad Urach  ",
   "Bad Vilbel (HE)",
-  "Bad Waldsee (BW)",
-  "Bad Wildbad (BW)",
+  "Bad Waldsee  ",
+  "Bad Wildbad  ",
   "Bad Wildungen (HE)",
   "Bad Wilsnack (BB)",
-  "Bad Wimpfen (BW)",
+  "Bad Wimpfen  ",
   "Bad Windsheim (BY)",
   "Bad Wörishofen (BY)",
   "Bad Wünnenberg (NW)",
-  "Bad Wurzach (BW)",
+  "Bad Wurzach  ",
   "Baesweiler (NW)",
   "Baiersdorf (BY)",
-  "Balingen (BW)",
+  "Balingen  ",
   "Ballenstedt (ST)",
   "Balve (NW)",
   "Bamberg (BY)",
@@ -586,7 +707,7 @@ if(data.msg=='success'){
   "Beerfelden (HE)",
   "Beeskow (BB)",
   "Beilngries (BY)",
-  "Beilstein (BW)",
+  "Beilstein  ",
   "Belgern-Schildau (SN)",
   "Bendorf (RP)",
   "Bensheim (HE)",
@@ -606,16 +727,16 @@ if(data.msg=='success'){
   "Bernsdorf (SN)",
   "Bernstadt a. d. Eigen (SN)",
   "Bersenbrück (NI)",
-  "Besigheim (BW)",
+  "Besigheim  ",
   "Betzdorf (RP)",
   "Betzenstein (BY)",
   "Beverungen (NW)",
   "Bexbach (SL)",
-  "Biberach an der Riß (BW)",
+  "Biberach an der Riß  ",
   "Biedenkopf (HE)",
   "Bielefeld (NW)",
   "Biesenthal (BB)",
-  "Bietigheim-Bissingen (BW)",
+  "Bietigheim-Bissingen  ",
   "Billerbeck (NW)",
   "Bingen am Rhein (RP)",
   "Birkenfeld (RP)",
@@ -626,15 +747,15 @@ if(data.msg=='success'){
   "Bitterfeld-Wolfen (ST)",
   "Blankenburg (Harz) (ST)",
   "Blankenhain (TH)",
-  "Blaubeuren (BW)",
-  "Blaustein (BW)",
+  "Blaubeuren  ",
+  "Blaustein  ",
   "Bleckede (NI)",
   "Bleicherode (TH)",
   "Blieskastel (SL)",
   "Blomberg (NW)",
-  "Blumberg (BW)",
+  "Blumberg  ",
   "Bobingen (BY)",
-  "Böblingen (BW)",
+  "Böblingen  ",
   "Bocholt (NW)",
   "Bochum (NW)",
   "Bockenem (NI)",
@@ -643,9 +764,9 @@ if(data.msg=='success'){
   "Böhlen (SN)",
   "Boizenburg/Elbe (MV)",
   "Bonn (NW, Bundesstadt)",
-  "Bonndorf im Schwarzwald (BW)",
-  "Bönnigheim (BW)",
-  "Bopfingen (BW)",
+  "Bonndorf im Schwarzwald  ",
+  "Bönnigheim  ",
+  "Bopfingen  ",
   "Boppard (RP)",
   "Borgentreich (NW)",
   "Borgholzhausen (NW)",
@@ -655,8 +776,8 @@ if(data.msg=='success'){
   "Borna (SN)",
   "Bornheim (NW)",
   "Bottrop (NW)",
-  "Boxberg (BW)",
-  "Brackenheim (BW)",
+  "Boxberg  ",
+  "Brackenheim  ",
   "Brake (Unterweser) (NI)",
   "Brakel (NW)",
   "Bramsche (NI)",
@@ -666,34 +787,34 @@ if(data.msg=='success'){
   "Braubach (RP)",
   "Braunfels (HE)",
   "Braunlage (NI)",
-  "Bräunlingen (BW)",
+  "Bräunlingen  ",
   "Braunsbedra (ST)",
   "Braunschweig (NI)",
   "Breckerfeld (NW)",
   "Bredstedt (SH)",
-  "Breisach am Rhein (BW)",
+  "Breisach am Rhein  ",
   "Bremen, Freie Hansestadt (HB)",
   "Bremerhaven (HB)",
   "Bremervörde (NI)",
-  "Bretten (BW)",
+  "Bretten  ",
   "Breuberg (HE)",
   "Brilon (NW)",
   "Brotterode-Trusetal (TH)",
   "Bruchköbel (HE)",
-  "Bruchsal (BW)",
+  "Bruchsal  ",
   "Brück (BB)",
   "Brüel (MV)",
   "Brühl (NW)",
   "Brunsbüttel (SH)",
   "Brüssow (BB)",
-  "Buchen (Odenwald) (BW)",
+  "Buchen (Odenwald)  ",
   "Buchholz in der Nordheide (NI)",
   "Buchloe (BY)",
   "Bückeburg (NI)",
   "Buckow (Märkische Schweiz) (BB)",
   "Büdelsdorf (SH)",
   "Büdingen (HE)",
-  "Bühl (BW)",
+  "Bühl  ",
   "Bünde (NW)",
   "Büren (NW)",
   "Burg (ST)",
@@ -707,7 +828,7 @@ if(data.msg=='success'){
   "Burgstädt (SN)",
   "Burg Stargard (MV)",
   "Burgwedel (NI)",
-  "Burladingen (BW)",
+  "Burladingen  ",
   "Burscheid (NW)",
   "Bürstadt (HE)",
   "Buttelstedt (TH)",
@@ -717,7 +838,7 @@ if(data.msg=='success'){
   "Buxtehude (NI)",
   "Calau (BB)",
   "Calbe (Saale) (ST)",
-  "Calw (BW)",
+  "Calw  ",
   "Castrop-Rauxel (NW)",
   "Celle (NI)",
   "Cham (BY)",
@@ -732,8 +853,8 @@ if(data.msg=='success'){
   "Coswig (SN)",
   "Coswig (Anhalt) (ST)",
   "Cottbus (BB)",
-  "Crailsheim (BW)",
-  "Creglingen (BW)",
+  "Crailsheim  ",
+  "Creglingen  ",
   "Creußen (BY)",
   "Creuzburg (TH)",
   "Crimmitschau (SN)",
@@ -764,7 +885,7 @@ if(data.msg=='success'){
   "Diemelstadt (HE)",
   "Diepholz (NI)",
   "Dierdorf (RP)",
-  "Dietenheim (BW)",
+  "Dietenheim  ",
   "Dietfurt an der Altmühl (BY)",
   "Dietzenbach (HE)",
   "Diez (RP)",
@@ -778,21 +899,21 @@ if(data.msg=='success'){
   "Dinslaken (NW)",
   "Dippoldiswalde (SN)",
   "Dissen am Teutoburger Wald (NI)",
-  "Ditzingen (BW)",
+  "Ditzingen  ",
   "Döbeln (SN)",
   "Doberlug-Kirchhain (BB)",
   "Döbern (BB)",
   "Dohna (SN)",
   "Dömitz (MV)",
   "Dommitzsch (SN)",
-  "Donaueschingen (BW)",
+  "Donaueschingen  ",
   "Donauwörth (BY)",
-  "Donzdorf (BW)",
+  "Donzdorf  ",
   "Dorfen (BY)",
   "Dormagen (NW)",
   "Dornburg-Camburg (TH)",
-  "Dornhan (BW)",
-  "Dornstetten (BW)",
+  "Dornhan  ",
+  "Dornstetten  ",
   "Dorsten (NW)",
   "Dortmund (NW)",
   "Dransfeld (NI)",
@@ -807,10 +928,10 @@ if(data.msg=='success'){
   "Düren (NW)",
   "Düsseldorf (NW, Landeshauptstadt)",
   "Ebeleben (TH)",
-  "Eberbach (BW)",
+  "Eberbach  ",
   "Ebermannstadt (BY)",
   "Ebern (BY)",
-  "Ebersbach an der Fils (BW)",
+  "Ebersbach an der Fils  ",
   "Ebersbach-Neugersdorf (SN)",
   "Ebersberg (BY)",
   "Eberswalde (BB)",
@@ -820,7 +941,7 @@ if(data.msg=='success'){
   "Egeln (ST)",
   "Eggenfelden (BY)",
   "Eggesin (MV)",
-  "Ehingen (Donau) (BW)",
+  "Ehingen (Donau)  ",
   "Ehrenfriedersdorf (SN)",
   "Eibelstadt (BY)",
   "Eibenstock (SN)",
@@ -833,10 +954,10 @@ if(data.msg=='success'){
   "Eisenhüttenstadt (BB)",
   "Eisfeld (TH)",
   "Eisleben, Lutherstadt (ST)",
-  "Eislingen/Fils (BW)",
+  "Eislingen/Fils  ",
   "Ellingen (BY)",
   "Ellrich (TH)",
-  "Ellwangen (Jagst) (BW)",
+  "Ellwangen (Jagst)  ",
   "Elmshorn (SH)",
   "Elsdorf (NW)",
   "Elsfleth (NI)",
@@ -846,22 +967,22 @@ if(data.msg=='success'){
   "Elterlein (SN)",
   "Eltmann (BY)",
   "Eltville am Rhein (HE)",
-  "Elzach (BW)",
+  "Elzach  ",
   "Elze (NI)",
   "Emden (NI)",
   "Emmelshausen (RP)",
-  "Emmendingen (BW)",
+  "Emmendingen  ",
   "Emmerich am Rhein (NW)",
   "Emsdetten (NW)",
-  "Endingen am Kaiserstuhl (BW)",
-  "Engen (BW)",
+  "Endingen am Kaiserstuhl  ",
+  "Engen  ",
   "Enger (NW)",
   "Ennepetal (NW)",
   "Ennigerloh (NW)",
-  "Eppelheim (BW)",
-  "Eppingen (BW)",
+  "Eppelheim  ",
+  "Eppingen  ",
   "Eppstein (HE)",
-  "Erbach (BW)",
+  "Erbach  ",
   "Erbach (Odenwald) (HE)",
   "Erbendorf (BY)",
   "Erding (BY)",
@@ -882,9 +1003,9 @@ if(data.msg=='success'){
   "Esens (NI)",
   "Espelkamp (NW)",
   "Essen (NW)",
-  "Esslingen am Neckar (BW)",
-  "Ettenheim (BW)",
-  "Ettlingen (BW)",
+  "Esslingen am Neckar  ",
+  "Ettenheim  ",
+  "Ettlingen  ",
   "Euskirchen (NW)",
   "Eutin (SH)",
   "Falkenberg/Elster (BB)",
@@ -892,10 +1013,10 @@ if(data.msg=='success'){
   "Falkenstein/Harz (ST)",
   "Falkenstein/Vogtl. (SN)",
   "Fehmarn (SH)",
-  "Fellbach (BW)",
+  "Fellbach  ",
   "Felsberg (HE)",
   "Feuchtwangen (BY)",
-  "Filderstadt (BW)",
+  "Filderstadt  ",
   "Finsterwalde (BB)",
   "Fladungen (BY)",
   "Flensburg (SH)",
@@ -903,7 +1024,7 @@ if(data.msg=='success'){
   "Flörsheim am Main (HE)",
   "Florstadt (HE)",
   "Forchheim (BY)",
-  "Forchtenberg (BW)",
+  "Forchtenberg  ",
   "Forst (Lausitz) (BB)",
   "Frankenau (HE)",
   "Frankenberg (Eder) (HE)",
@@ -914,28 +1035,28 @@ if(data.msg=='success'){
   "Franzburg (MV)",
   "Frauenstein (SN)",
   "Frechen (NW)",
-  "Freiberg am Neckar (BW)",
+  "Freiberg am Neckar  ",
   "Freiberg (SN)",
-  "Freiburg im Breisgau (BW)",
+  "Freiburg im Breisgau  ",
   "Freilassing (BY)",
   "Freinsheim (RP)",
   "Freising (BY)",
   "Freital (SN)",
   "Freren (NI)",
-  "Freudenberg (BW)",
+  "Freudenberg  ",
   "Freudenberg (NW)",
-  "Freudenstadt (BW)",
+  "Freudenstadt  ",
   "Freyburg (Unstrut) (ST)",
   "Freystadt (BY)",
   "Freyung (BY)",
-  "Fridingen an der Donau (BW)",
+  "Fridingen an der Donau  ",
   "Friedberg (BY)",
   "Friedberg (HE)",
   "Friedland (MV)",
   "Friedland (BB)",
   "Friedrichroda (TH)",
   "Friedrichsdorf (HE)",
-  "Friedrichshafen (BW)",
+  "Friedrichshafen  ",
   "Friedrichstadt (SH)",
   "Friedrichsthal (SL)",
   "Friesack (BB)",
@@ -950,12 +1071,12 @@ if(data.msg=='success'){
   "Fürstenwalde/Spree (BB)",
   "Fürth (BY)",
   "Furth im Wald (BY)",
-  "Furtwangen im Schwarzwald (BW)",
+  "Furtwangen im Schwarzwald  ",
   "Füssen (BY)",
   "Gadebusch (MV)",
-  "Gaggenau (BW)",
-  "Gaildorf (BW)",
-  "Gammertingen (BW)",
+  "Gaggenau  ",
+  "Gaildorf  ",
+  "Gammertingen  ",
   "Garbsen (NI)",
   "Garching bei München (BY)",
   "Gardelegen (ST)",
@@ -976,27 +1097,27 @@ if(data.msg=='success'){
   "Geiselhöring (BY)",
   "Geisenfeld (BY)",
   "Geisenheim (HE)",
-  "Geisingen (BW)",
-  "Geislingen (BW)",
-  "Geislingen an der Steige (BW)",
+  "Geisingen  ",
+  "Geislingen  ",
+  "Geislingen an der Steige  ",
   "Geithain (SN)",
   "Geldern (NW)",
   "Gelnhausen (HE)",
   "Gelsenkirchen (NW)",
   "Gemünden am Main (BY)",
   "Gemünden (Wohra) (HE)",
-  "Gengenbach (BW)",
+  "Gengenbach  ",
   "Genthin (ST)",
   "Georgsmarienhütte (NI)",
   "Gera (TH)",
-  "Gerabronn (BW)",
+  "Gerabronn  ",
   "Gerbstedt (ST)",
   "Geretsried (BY)",
   "Geringswalde (SN)",
-  "Gerlingen (BW)",
+  "Gerlingen  ",
   "Germering (BY)",
   "Germersheim (RP)",
-  "Gernsbach (BW)",
+  "Gernsbach  ",
   "Gernsheim (HE)",
   "Gerolstein (RP)",
   "Gerolzhofen (BY)",
@@ -1006,7 +1127,7 @@ if(data.msg=='success'){
   "Geseke (NW)",
   "Gevelsberg (NW)",
   "Geyer (SN)",
-  "Giengen an der Brenz (BW)",
+  "Giengen an der Brenz  ",
   "Gießen (HE)",
   "Gifhorn (NI)",
   "Ginsheim-Gustavsburg (HE)",
@@ -1023,7 +1144,7 @@ if(data.msg=='success'){
   "Goldkronach (BY)",
   "Golßen (BB)",
   "Gommern (ST)",
-  "Göppingen (BW)",
+  "Göppingen  ",
   "Görlitz (SN)",
   "Goslar (NI)",
   "Gößnitz (TH)",
@@ -1056,7 +1177,7 @@ if(data.msg=='success'){
   "Gröningen (ST)",
   "Großalmerode (HE)",
   "Groß-Bieberau (HE)",
-  "Großbottwar (BW)",
+  "Großbottwar  ",
   "Großbreitenbach (TH)",
   "Großenehrich (TH)",
   "Großenhain (SN)",
@@ -1067,14 +1188,14 @@ if(data.msg=='success'){
   "Groß-Umstadt (HE)",
   "Grünberg (HE)",
   "Grünhain-Beierfeld (SN)",
-  "Grünsfeld (BW)",
+  "Grünsfeld  ",
   "Grünstadt (RP)",
   "Guben (BB)",
   "Gudensberg (HE)",
-  "Güglingen (BW)",
+  "Güglingen  ",
   "Gummersbach (NW)",
   "Gundelfingen an der Donau (BY)",
-  "Gundelsheim (BW)",
+  "Gundelsheim  ",
   "Günzburg (BY)",
   "Gunzenhausen (BY)",
   "Güsten (ST)",
@@ -1088,9 +1209,9 @@ if(data.msg=='success'){
   "Hagenbach (RP)",
   "Hagenow (MV)",
   "Haiger (HE)",
-  "Haigerloch (BW)",
+  "Haigerloch  ",
   "Hainichen (SN)",
-  "Haiterbach (BW)",
+  "Haiterbach  ",
   "Halberstadt (ST)",
   "Haldensleben (ST)",
   "Halle (Saale) (ST)",
@@ -1115,32 +1236,32 @@ if(data.msg=='success'){
   "Hartha (SN)",
   "Harzgerode (ST)",
   "Haselünne (NI)",
-  "Haslach im Kinzigtal (BW)",
+  "Haslach im Kinzigtal  ",
   "Haßfurt (BY)",
   "Hattersheim am Main (HE)",
   "Hattingen (NW)",
   "Hatzfeld (Eder) (HE)",
-  "Hausach (BW)",
+  "Hausach  ",
   "Hauzenberg (BY)",
   "Havelberg (ST)",
   "Havelsee (BB)",
-  "Hayingen (BW)",
-  "Hechingen (BW)",
+  "Hayingen  ",
+  "Hechingen  ",
   "Hecklingen (ST)",
   "Heide (SH)",
   "Heideck (BY)",
-  "Heidelberg (BW)",
+  "Heidelberg  ",
   "Heidenau (SN)",
-  "Heidenheim an der Brenz (BW)",
+  "Heidenheim an der Brenz  ",
   "Heilbad Heiligenstadt (TH)",
-  "Heilbronn (BW)",
+  "Heilbronn  ",
   "Heiligenhafen (SH)",
   "Heiligenhaus (NW)",
   "Heilsbronn (BY)",
   "Heimbach (NW)",
-  "Heimsheim (BW)",
+  "Heimsheim  ",
   "Heinsberg (NW)",
-  "Heitersheim (BW)",
+  "Heitersheim  ",
   "Heldrungen (TH)",
   "Helmbrechts (BY)",
   "Helmstedt (NI)",
@@ -1148,13 +1269,13 @@ if(data.msg=='success'){
   "Hemer (NW)",
   "Hemmingen (NI)",
   "Hemmoor (NI)",
-  "Hemsbach (BW)",
+  "Hemsbach  ",
   "Hennef (Sieg) (NW)",
   "Hennigsdorf (BB)",
   "Heppenheim (Bergstraße) (HE)",
-  "Herbolzheim (BW)",
+  "Herbolzheim  ",
   "Herborn (HE)",
-  "Herbrechtingen (BW)",
+  "Herbrechtingen  ",
   "Herbstein (HE)",
   "Herdecke (NW)",
   "Herdorf (RP)",
@@ -1164,7 +1285,7 @@ if(data.msg=='success'){
   "Hermeskeil (RP)",
   "Hermsdorf (TH)",
   "Herne (NW)",
-  "Herrenberg (BW)",
+  "Herrenberg  ",
   "Herrieden (BY)",
   "Herrnhut (SN)",
   "Hersbruck (BY)",
@@ -1175,9 +1296,9 @@ if(data.msg=='success'){
   "Herzogenrath (NW)",
   "Hessisch Lichtenau (HE)",
   "Hessisch Oldendorf (NI)",
-  "Hettingen (BW)",
+  "Hettingen  ",
   "Hettstedt (ST)",
-  "Heubach (BW)",
+  "Heubach  ",
   "Heusenstamm (HE)",
   "Hilchenbach (NW)",
   "Hildburghausen (TH)",
@@ -1192,7 +1313,7 @@ if(data.msg=='success'){
   "Hochheim am Main (HE)",
   "Höchstadt an der Aisch (BY)",
   "Höchstädt an der Donau (BY)",
-  "Hockenheim (BW)",
+  "Hockenheim  ",
   "Hof (BY)",
   "Hofgeismar (HE)",
   "Hofheim am Taunus (HE)",
@@ -1205,15 +1326,15 @@ if(data.msg=='success'){
   "Hohnstein (SN)",
   "Höhr-Grenzhausen (RP)",
   "Hollfeld (BY)",
-  "Holzgerlingen (BW)",
+  "Holzgerlingen  ",
   "Holzminden (NI)",
   "Homberg (Efze) (HE)",
   "Homberg (Ohm) (HE)",
   "Homburg (SL)",
-  "Horb am Neckar (BW)",
+  "Horb am Neckar  ",
   "Hornbach (RP)",
   "Horn-Bad Meinberg (NW)",
-  "Hornberg (BW)",
+  "Hornberg  ",
   "Hörstel (NW)",
   "Horstmar (NW)",
   "Höxter (NW)",
@@ -1221,7 +1342,7 @@ if(data.msg=='success'){
   "Hoyerswerda (SN)",
   "Hückelhoven (NW)",
   "Hückeswagen (NW)",
-  "Hüfingen (BW)",
+  "Hüfingen  ",
   "Hünfeld (HE)",
   "Hungen (HE)",
   "Hürth (NW)",
@@ -1233,15 +1354,15 @@ if(data.msg=='success'){
   "Illertissen (BY)",
   "Ilmenau (TH)",
   "Ilsenburg (Harz) (ST)",
-  "Ilshofen (BW)",
+  "Ilshofen  ",
   "Immenhausen (HE)",
   "Immenstadt im Allgäu (BY)",
-  "Ingelfingen (BW)",
+  "Ingelfingen  ",
   "Ingelheim am Rhein (RP)",
   "Ingolstadt (BY)",
   "Iphofen (BY)",
   "Iserlohn (NW)",
-  "Isny im Allgäu (BW)",
+  "Isny im Allgäu  ",
   "Isselburg (NW)",
   "Itzehoe (SH)",
   "Jarmen (MV)",
@@ -1266,17 +1387,17 @@ if(data.msg=='success'){
   "Kamenz (SN)",
   "Kamp-Lintfort (NW)",
   "Kandel (RP)",
-  "Kandern (BW)",
+  "Kandern  ",
   "Kappeln (SH)",
   "Karben (HE)",
-  "Karlsruhe (BW)",
+  "Karlsruhe  ",
   "Karlstadt (BY)",
   "Kassel (HE)",
   "Kastellaun (RP)",
   "Katzenelnbogen (RP)",
   "Kaub (RP)",
   "Kaufbeuren (BY)",
-  "Kehl (BW)",
+  "Kehl  ",
   "Kelbra (Kyffhäuser) (ST)",
   "Kelheim (BY)",
   "Kelkheim (Taunus) (HE)",
@@ -1286,7 +1407,7 @@ if(data.msg=='success'){
   "Kemnath (BY)",
   "Kempen (NW)",
   "Kempten (Allgäu) (BY)",
-  "Kenzingen (BW)",
+  "Kenzingen  ",
   "Kerpen (NW)",
   "Ketzin/Havel (BB)",
   "Kevelaer (NW)",
@@ -1294,13 +1415,13 @@ if(data.msg=='success'){
   "Kierspe (NW)",
   "Kindelbrück (TH)",
   "Kirchberg (SN)",
-  "Kirchberg an der Jagst (BW)",
+  "Kirchberg an der Jagst  ",
   "Kirchberg (Hunsrück) (RP)",
   "Kirchen (Sieg) (RP)",
   "Kirchenlamitz (BY)",
   "Kirchhain (HE)",
   "Kirchheimbolanden (RP)",
-  "Kirchheim unter Teck (BW)",
+  "Kirchheim unter Teck  ",
   "Kirn (RP)",
   "Kirtorf (HE)",
   "Kitzingen (BY)",
@@ -1310,7 +1431,7 @@ if(data.msg=='success'){
   "Klingenthal (SN)",
   "Klötze (ST)",
   "Klütz (MV)",
-  "Knittlingen (BW)",
+  "Knittlingen  ",
   "Koblenz (RP)",
   "Kohren-Sahlis (SN)",
   "Kolbermoor (BY)",
@@ -1326,17 +1447,17 @@ if(data.msg=='success'){
   "Königswinter (NW)",
   "Königs Wusterhausen (BB)",
   "Könnern (ST)",
-  "Konstanz (BW)",
+  "Konstanz  ",
   "Konz (RP)",
   "Korbach (HE)",
-  "Korntal-Münchingen (BW)",
-  "Kornwestheim (BW)",
+  "Korntal-Münchingen  ",
+  "Kornwestheim  ",
   "Korschenbroich (NW)",
   "Köthen (Anhalt) (ST)",
-  "Kraichtal (BW)",
+  "Kraichtal  ",
   "Krakow am See (MV)",
   "Kranichfeld (TH)",
-  "Krautheim (BW)",
+  "Krautheim  ",
   "Krefeld (NW)",
   "Kremmen (BB)",
   "Krempe (SH)",
@@ -1348,20 +1469,20 @@ if(data.msg=='success'){
   "Krumbach (Schwaben) (BY)",
   "Kühlungsborn (MV)",
   "Kulmbach (BY)",
-  "Külsheim (BW)",
-  "Künzelsau (BW)",
+  "Külsheim  ",
+  "Künzelsau  ",
   "Kupferberg (BY)",
-  "Kuppenheim (BW)",
+  "Kuppenheim  ",
   "Kusel (RP)",
   "Kyllburg (RP)",
   "Kyritz (BB)",
   "Laage (MV)",
   "Laatzen (NI)",
-  "Ladenburg (BW)",
+  "Ladenburg  ",
   "Lage (NW)",
   "Lahnstein (RP)",
-  "Lahr/Schwarzwald (BW)",
-  "Laichingen (BW)",
+  "Lahr/Schwarzwald  ",
+  "Laichingen  ",
   "Lambrecht (Pfalz) (RP)",
   "Lampertheim (HE)",
   "Landau an der Isar (BY)",
@@ -1372,8 +1493,8 @@ if(data.msg=='success'){
   "Landstuhl (RP)",
   "Langelsheim (NI)",
   "Langen (HE)",
-  "Langenau (BW)",
-  "Langenburg (BW)",
+  "Langenau  ",
+  "Langenburg  ",
   "Langenfeld (Rheinland) (NW)",
   "Langenhagen (NI)",
   "Langenselbold (HE)",
@@ -1383,30 +1504,30 @@ if(data.msg=='success'){
   "Laubach (HE)",
   "Laucha an der Unstrut (ST)",
   "Lauchhammer (BB)",
-  "Lauchheim (BW)",
-  "Lauda-Königshofen (BW)",
+  "Lauchheim  ",
+  "Lauda-Königshofen  ",
   "Lauenburg/Elbe (SH)",
   "Lauf an der Pegnitz (BY)",
   "Laufen (BY)",
-  "Laufenburg (Baden) (BW)",
-  "Lauffen am Neckar (BW)",
+  "Laufenburg (Baden)  ",
+  "Lauffen am Neckar  ",
   "Lauingen (Donau) (BY)",
-  "Laupheim (BW)",
+  "Laupheim  ",
   "Lauscha (TH)",
   "Lauta (SN)",
   "Lauter-Bernsbach (SN)",
   "Lauterbach (HE)",
   "Lauterecken (RP)",
-  "Lauterstein (BW)",
+  "Lauterstein  ",
   "Lebach (SL)",
   "Lebus (BB)",
   "Leer (Ostfriesland) (NI)",
   "Lehesten (TH)",
   "Lehrte (NI)",
   "Leichlingen (Rheinland) (NW)",
-  "Leimen (BW)",
+  "Leimen  ",
   "Leinefelde-Worbis (TH)",
-  "Leinfelden-Echterdingen (BW)",
+  "Leinfelden-Echterdingen  ",
   "Leipheim (BY)",
   "Leipzig (SN)",
   "Leisnig (SN)",
@@ -1415,15 +1536,15 @@ if(data.msg=='success'){
   "Lengerich (NW)",
   "Lennestadt (NW)",
   "Lenzen (BB)",
-  "Leonberg (BW)",
+  "Leonberg  ",
   "Leun (HE)",
   "Leuna (ST)",
   "Leutenberg (TH)",
   "Leutershausen (BY)",
-  "Leutkirch im Allgäu (BW)",
+  "Leutkirch im Allgäu  ",
   "Leverkusen (NW)",
   "Lich (HE)",
-  "Lichtenau (BW)",
+  "Lichtenau  ",
   "Lichtenau (NW)",
   "Lichtenberg (BY)",
   "Lichtenfels (BY)",
@@ -1445,7 +1566,7 @@ if(data.msg=='success'){
   "Linz am Rhein (RP)",
   "Lippstadt (NW)",
   "Löbau (SN)",
-  "Löffingen (BW)",
+  "Löffingen  ",
   "Lohmar (NW)",
   "Lohne (Oldenburg) (NI)",
   "Löhne (NW)",
@@ -1454,12 +1575,12 @@ if(data.msg=='success'){
   "Lollar (HE)",
   "Lommatzsch (SN)",
   "Löningen (NI)",
-  "Lorch (BW)",
+  "Lorch  ",
   "Lorch (HE)",
-  "Lörrach (BW)",
+  "Lörrach  ",
   "Lorsch (HE)",
   "Lößnitz (SN)",
-  "Löwenstein (BW)",
+  "Löwenstein  ",
   "Lübbecke (NW)",
   "Lübben (Spreewald) (BB)",
   "Lübbenau/Spreewald (BB)",
@@ -1472,7 +1593,7 @@ if(data.msg=='success'){
   "Luckenwalde (BB)",
   "Lüdenscheid (NW)",
   "Lüdinghausen (NW)",
-  "Ludwigsburg (BW)",
+  "Ludwigsburg  ",
   "Ludwigsfelde (BB)",
   "Ludwigshafen am Rhein (RP)",
   "Ludwigslust (MV)",
@@ -1487,22 +1608,22 @@ if(data.msg=='success'){
   "Lychen (BB)",
   "Magdala (TH)",
   "Magdeburg (ST, Landeshauptstadt)",
-  "Mahlberg (BW)",
+  "Mahlberg  ",
   "Mainbernheim (BY)",
   "Mainburg (BY)",
   "Maintal (HE)",
   "Mainz (RP, Landeshauptstadt)",
   "Malchin (MV)",
   "Malchow (MV)",
-  "Mannheim (BW)",
+  "Mannheim  ",
   "Manderscheid (RP)",
   "Mansfeld (ST)",
-  "Marbach am Neckar (BW)",
+  "Marbach am Neckar  ",
   "Marburg (HE)",
   "Marienberg (SN)",
   "Marienmünster (NW)",
-  "Markdorf (BW)",
-  "Markgröningen (BW)",
+  "Markdorf  ",
+  "Markgröningen  ",
   "Märkisch Buchholz (BB)",
   "Markkleeberg (SN)",
   "Markneukirchen (SN)",
@@ -1517,7 +1638,7 @@ if(data.msg=='success'){
   "Marlow (MV)",
   "Marne (SH)",
   "Marsberg (NW)",
-  "Maulbronn (BW)",
+  "Maulbronn  ",
   "Maxhütte-Haidhof (BY)",
   "Mayen (RP)",
   "Mechernich (NW)",
@@ -1525,7 +1646,7 @@ if(data.msg=='success'){
   "Medebach (NW)",
   "Meerane (SN)",
   "Meerbusch (NW)",
-  "Meersburg (BW)",
+  "Meersburg  ",
   "Meinerzhagen (NW)",
   "Meiningen (TH)",
   "Meisenheim (RP)",
@@ -1537,16 +1658,16 @@ if(data.msg=='success'){
   "Memmingen (BY)",
   "Menden (Sauerland) (NW)",
   "Mendig (RP)",
-  "Mengen (BW)",
+  "Mengen  ",
   "Meppen (NI)",
   "Merkendorf (BY)",
   "Merseburg (ST)",
   "Merzig (SL)",
   "Meschede (NW)",
-  "Meßkirch (BW)",
-  "Meßstetten (BW)",
+  "Meßkirch  ",
+  "Meßstetten  ",
   "Mettmann (NW)",
-  "Metzingen (BW)",
+  "Metzingen  ",
   "Meuselwitz (TH)",
   "Meyenburg (BB)",
   "Michelstadt (HE)",
@@ -1559,7 +1680,7 @@ if(data.msg=='success'){
   "Mitterteich (BY)",
   "Mittweida (SN)",
   "Möckern (ST)",
-  "Möckmühl (BW)",
+  "Möckmühl  ",
   "Moers (NW)",
   "Mölln (SH)",
   "Mönchengladbach (NW)",
@@ -1570,34 +1691,34 @@ if(data.msg=='success'){
   "Moosburg an der Isar (BY)",
   "Mörfelden-Walldorf (HE)",
   "Moringen (NI)",
-  "Mosbach (BW)",
-  "Mössingen (BW)",
+  "Mosbach  ",
+  "Mössingen  ",
   "Mücheln (Geiseltal) (ST)",
   "Mügeln (SN)",
-  "Mühlacker (BW)",
+  "Mühlacker  ",
   "Mühlberg/Elbe (BB)",
   "Mühldorf am Inn (BY)",
   "Mühlhausen/Thüringen (TH)",
   "Mühlheim am Main (HE)",
-  "Mühlheim an der Donau (BW)",
+  "Mühlheim an der Donau  ",
   "Mülheim an der Ruhr (NW)",
   "Mülheim-Kärlich (RP)",
-  "Müllheim (BW)",
+  "Müllheim  ",
   "Müllrose (BB)",
   "Münchberg (BY)",
   "Müncheberg (BB)",
   "München (BY, Landeshauptstadt)",
   "Münchenbernsdorf (TH)",
-  "Munderkingen (BW)",
+  "Munderkingen  ",
   "Münnerstadt (BY)",
-  "Münsingen (BW)",
+  "Münsingen  ",
   "Munster (NI)",
   "Münster (NW)",
   "Münstermaifeld (RP)",
   "Münzenberg (HE)",
-  "Murrhardt (BW)",
+  "Murrhardt  ",
   "Nabburg (BY)",
-  "Nagold (BW)",
+  "Nagold  ",
   "Naila (BY)",
   "Nassau (RP)",
   "Nastätten (RP)",
@@ -1606,28 +1727,28 @@ if(data.msg=='success'){
   "Naumburg (Saale) (ST)",
   "Naunhof (SN)",
   "Nebra (Unstrut) (ST)",
-  "Neckarbischofsheim (BW)",
-  "Neckargemünd (BW)",
+  "Neckarbischofsheim  ",
+  "Neckargemünd  ",
   "Neckarsteinach (HE)",
-  "Neckarsulm (BW)",
-  "Neresheim (BW)",
+  "Neckarsulm  ",
+  "Neresheim  ",
   "Netphen (NW)",
   "Nettetal (NW)",
   "Netzschkau (SN)",
   "Neu-Anspach (HE)",
   "Neubrandenburg (MV)",
   "Neubukow (MV)",
-  "Neubulach (BW)",
+  "Neubulach  ",
   "Neuburg an der Donau (BY)",
-  "Neudenau (BW)",
-  "Neuenbürg (BW)",
-  "Neuenburg am Rhein (BW)",
+  "Neudenau  ",
+  "Neuenbürg  ",
+  "Neuenburg am Rhein  ",
   "Neuenhaus (NI)",
   "Neuenrade (NW)",
-  "Neuenstadt am Kocher (BW)",
-  "Neuenstein (BW)",
+  "Neuenstadt am Kocher  ",
+  "Neuenstein  ",
   "Neuerburg (RP)",
-  "Neuffen (BW)",
+  "Neuffen  ",
   "Neuhaus am Rennweg (TH)",
   "Neu-Isenburg (HE)",
   "Neukalen (MV)",
@@ -1669,10 +1790,10 @@ if(data.msg=='success'){
   "Niebüll (SH)",
   "Niedenstein (HE)",
   "Niederkassel (NW)",
-  "Niedernhall (BW)",
+  "Niedernhall  ",
   "Nieder-Olm (RP)",
-  "Niederstetten (BW)",
-  "Niederstotzingen (BW)",
+  "Niederstetten  ",
+  "Niederstotzingen  ",
   "Nieheim (NW)",
   "Niemegk (BB)",
   "Nienburg (Saale) (ST)",
@@ -1691,20 +1812,20 @@ if(data.msg=='success'){
   "Nortorf (SH)",
   "Nossen (SN)",
   "Nürnberg (BY)",
-  "Nürtingen (BW)",
+  "Nürtingen  ",
   "Oberasbach (BY)",
   "Oberharz am Brocken (ST)",
   "Oberhausen (NW)",
   "Oberhof (TH)",
-  "Oberkirch (BW)",
-  "Oberkochen (BW)",
+  "Oberkirch  ",
+  "Oberkochen  ",
   "Oberlungwitz (SN)",
   "Obermoschel (RP)",
   "Obernburg am Main (BY)",
-  "Oberndorf am Neckar (BW)",
+  "Oberndorf am Neckar  ",
   "Obernkirchen (NI)",
   "Ober-Ramstadt (HE)",
-  "Oberriexingen (BW)",
+  "Oberriexingen  ",
   "Obertshausen (HE)",
   "Oberursel (Taunus) (HE)",
   "Oberviechtach (BY)",
@@ -1712,7 +1833,7 @@ if(data.msg=='success'){
   "Oberwesel (RP)",
   "Oberwiesenthal (SN)",
   "Ochsenfurt (BY)",
-  "Ochsenhausen (BW)",
+  "Ochsenhausen  ",
   "Ochtrup (NW)",
   "Oderberg (BB)",
   "Oebisfelde-Weferlingen (ST)",
@@ -1725,9 +1846,9 @@ if(data.msg=='success'){
   "Oestrich-Winkel (HE)",
   "Oettingen in Bayern (BY)",
   "Offenbach am Main (HE)",
-  "Offenburg (BW)",
+  "Offenburg  ",
   "Ohrdruf (TH)",
-  "Öhringen (BW)",
+  "Öhringen  ",
   "Olbernhau (SN)",
   "Olching (BY)",
   "Oldenburg (Oldb) (NI)",
@@ -1735,7 +1856,7 @@ if(data.msg=='success'){
   "Olfen (NW)",
   "Olpe (NW)",
   "Olsberg (NW)",
-  "Oppenau (BW)",
+  "Oppenau  ",
   "Oppenheim (RP)",
   "Oranienbaum-Wörlitz (ST)",
   "Oranienburg (BB)",
@@ -1747,22 +1868,22 @@ if(data.msg=='success'){
   "Oschersleben (Bode) (ST)",
   "Osnabrück (NI)",
   "Osterburg (Altmark) (ST)",
-  "Osterburken (BW)",
+  "Osterburken  ",
   "Osterfeld (ST)",
   "Osterhofen (BY)",
   "Osterholz-Scharmbeck (NI)",
   "Osterode am Harz (NI)",
   "Osterwieck (ST)",
-  "Ostfildern (BW)",
+  "Ostfildern  ",
   "Ostheim vor der Rhön (BY)",
   "Osthofen (RP)",
-  "Östringen (BW)",
+  "Östringen  ",
   "Ostritz (SN)",
   "Otterberg (RP)",
   "Otterndorf (NI)",
   "Ottweiler (SL)",
   "Overath (NW)",
-  "Owen (BW)",
+  "Owen  ",
   "Paderborn (NW)",
   "Papenburg (NI)",
   "Pappenheim (BY)",
@@ -1784,12 +1905,12 @@ if(data.msg=='success'){
   "Petershagen (NW)",
   "Pfaffenhofen an der Ilm (BY)",
   "Pfarrkirchen (BY)",
-  "Pforzheim (BW)",
+  "Pforzheim  ",
   "Pfreimd (BY)",
-  "Pfullendorf (BW)",
-  "Pfullingen (BW)",
+  "Pfullendorf  ",
+  "Pfullingen  ",
   "Pfungstadt (HE)",
-  "Philippsburg (BW)",
+  "Philippsburg  ",
   "Pinneberg (SH)",
   "Pirmasens (RP)",
   "Pirna (SN)",
@@ -1799,7 +1920,7 @@ if(data.msg=='success'){
   "Plauen (SN)",
   "Plettenberg (NW)",
   "Pleystein (BY)",
-  "Plochingen (BW)",
+  "Plochingen  ",
   "Plön (SH)",
   "Pockau-Lengefeld (SN)",
   "Pocking (BY)",
@@ -1832,23 +1953,23 @@ if(data.msg=='success'){
   "Radebeul (SN)",
   "Radeburg (SN)",
   "Radevormwald (NW)",
-  "Radolfzell am Bodensee (BW)",
+  "Radolfzell am Bodensee  ",
   "Raguhn-Jeßnitz (ST)",
   "Rahden (NW)",
   "Rain (BY)",
   "Ramstein-Miesenbach (RP)",
   "Ranis (TH)",
   "Ransbach-Baumbach (RP)",
-  "Rastatt (BW)",
+  "Rastatt  ",
   "Rastenberg (TH)",
   "Rathenow (BB)",
   "Ratingen (NW)",
   "Ratzeburg (SH)",
-  "Rauenberg (BW)",
+  "Rauenberg  ",
   "Raunheim (HE)",
   "Rauschenberg (HE)",
-  "Ravensburg (BW)",
-  "Ravenstein (BW)",
+  "Ravensburg  ",
+  "Ravenstein  ",
   "Recklinghausen (NW)",
   "Rees (NW)",
   "Regen (BY)",
@@ -1866,30 +1987,30 @@ if(data.msg=='success'){
   "Remagen (RP)",
   "Remda-Teichel (TH)",
   "Remscheid (NW)",
-  "Remseck am Neckar (BW)",
-  "Renchen (BW)",
+  "Remseck am Neckar  ",
+  "Renchen  ",
   "Rendsburg (SH)",
   "Rennerod (RP)",
-  "Renningen (BW)",
+  "Renningen  ",
   "Rerik (MV)",
   "Rethem (Aller) (NI)",
-  "Reutlingen (BW)",
+  "Reutlingen  ",
   "Rheda-Wiedenbrück (NW)",
   "Rhede (NW)",
-  "Rheinau (BW)",
+  "Rheinau  ",
   "Rheinbach (NW)",
   "Rheinberg (NW)",
   "Rheinböllen (RP)",
   "Rheine (NW)",
-  "Rheinfelden (Baden) (BW)",
+  "Rheinfelden (Baden)  ",
   "Rheinsberg (BB)",
-  "Rheinstetten (BW)",
+  "Rheinstetten  ",
   "Rhens (RP)",
   "Rhinow (BB)",
   "Ribnitz-Damgarten (MV)",
   "Richtenberg (MV)",
   "Riedenburg (BY)",
-  "Riedlingen (BW)",
+  "Riedlingen  ",
   "Riedstadt (HE)",
   "Rieneck (BY)",
   "Riesa (SN)",
@@ -1910,7 +2031,7 @@ if(data.msg=='success'){
   "Ronneburg (TH)",
   "Ronnenberg (NI)",
   "Rosbach vor der Höhe (HE)",
-  "Rosenfeld (BW)",
+  "Rosenfeld  ",
   "Rosenheim (BY)",
   "Rosenthal (HE)",
   "Rösrath (NW)",
@@ -1925,10 +2046,10 @@ if(data.msg=='success'){
   "Rothenburg/O.L. (SN)",
   "Rothenburg ob der Tauber (BY)",
   "Rothenfels (BY)",
-  "Rottenburg am Neckar (BW)",
+  "Rottenburg am Neckar  ",
   "Rottenburg a.d.Laaber (BY)",
   "Röttingen (BY)",
-  "Rottweil (BW)",
+  "Rottweil  ",
   "Rötz (BY)",
   "Rüdesheim am Rhein (HE)",
   "Rudolstadt (TH)",
@@ -1936,7 +2057,7 @@ if(data.msg=='success'){
   "Ruhland (BB)",
   "Runkel (HE)",
   "Rüsselsheim am Main (HE)",
-  "Rutesheim (BW)",
+  "Rutesheim  ",
   "Rüthen (NW)",
   "Saalburg-Ebersdorf (TH)",
   "Saalfeld/Saale (TH)",
@@ -1944,7 +2065,7 @@ if(data.msg=='success'){
   "Saarburg (RP)",
   "Saarlouis (SL)",
   "Sachsenhagen (NI)",
-  "Sachsenheim (BW)",
+  "Sachsenheim  ",
   "Salzgitter (NI)",
   "Salzkotten (NW)",
   "Salzwedel, Hansestadt (ST)",
@@ -1960,16 +2081,16 @@ if(data.msg=='success'){
   "Sayda (SN)",
   "Schalkau (TH)",
   "Schauenstein (BY)",
-  "Scheer (BW)",
+  "Scheer  ",
   "Scheibenberg (SN)",
   "Scheinfeld (BY)",
-  "Schelklingen (BW)",
+  "Schelklingen  ",
   "Schenefeld (SH)",
   "Scheßlitz (BY)",
   "Schieder-Schwalenberg (NW)",
   "Schifferstadt (RP)",
   "Schillingsfürst (BY)",
-  "Schiltach (BW)",
+  "Schiltach  ",
   "Schirgiswalde-Kirschau (SN)",
   "Schkeuditz (SN)",
   "Schkölen (TH)",
@@ -1991,9 +2112,9 @@ if(data.msg=='success'){
   "Schnaittenbach (BY)",
   "Schneeberg (SN)",
   "Schneverdingen (NI)",
-  "Schömberg (BW)",
-  "Schönau (BW)",
-  "Schönau im Schwarzwald (BW)",
+  "Schömberg  ",
+  "Schönau  ",
+  "Schönau im Schwarzwald  ",
   "Schönberg (MV)",
   "Schönebeck (Elbe) (ST)",
   "Schöneck/Vogtl. (SN)",
@@ -2002,7 +2123,7 @@ if(data.msg=='success'){
   "Schöningen (NI)",
   "Schönsee (BY)",
   "Schönwald (BY)",
-  "Schopfheim (BW)",
+  "Schopfheim  ",
   "Schöppenstedt (NI)",
   "Schorndorf (BW)",
   "Schortens (NI)",
