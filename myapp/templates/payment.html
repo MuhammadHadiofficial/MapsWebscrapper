@@ -370,7 +370,7 @@ if(
             document.getElementById("main").appendChild(div)
 
                 // This function captures the funds from the transaction.
-                return fetch('http://localhost:8000/paypal-checkout/' + data.orderID + "/", {
+                return fetch('paypal-checkout/' + data.orderID + "/", {
                     method: 'POST',
                     headers: {
 
