@@ -155,7 +155,7 @@ def getData(businessname,city,country,id,radius):
     name_count = dataFrame[dataFrame['Firmenname / COMPANY NAME'] != '-'].count()[0]
 
     postalCode_count = dataFrame[dataFrame['PostalCode'] != '-'].count()[0]
-
+    print(total)
     print(filename)
     return {'filename':filename,'total':total, 'rating_count': str(rating_count),
                          'phone_count': str(phone_count), 'email_count': str(email_count), 'website_count': str(website_count),

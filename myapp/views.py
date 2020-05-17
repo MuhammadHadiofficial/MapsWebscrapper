@@ -153,7 +153,7 @@ def getFile(request):
         request.session.flush();
         return response
     else:
-        redirect('non/2')
+        return redirect('/non/3')
 
 def getPay(request):
 
@@ -199,7 +199,7 @@ def successMsg(request):
         return render(request,'success.html')
     else:
 
-        return redirect('non/1')
+        return redirect('/')
 def notfound_404(request,args):
     n=args
     if n=='1':
@@ -207,6 +207,6 @@ def notfound_404(request,args):
     elif n=='2':
         error='Payment not processed'
     else:
-        error='khghjghj'
+        error='Your Session Expired'
 
     return    render(request,'404.html',context={'err':error})

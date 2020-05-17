@@ -429,7 +429,7 @@ we can give you this information
   </div>
 </div>
       <div class="modal-footer justify-content-center">
-        <a href="pay" type="button" class="btn F" style="background: rgba(1, 3, 111, 0.8);">Go to cart</a>
+        <a href="pay" type="button" class="btn F" style="background: rgba(1, 3, 111, 0.8);color:white;">Go to cart</a>
         <a type="button" class="btn btn-outline-info waves-effect" data-dismiss="modal">Cancel</a>
       </div>
 

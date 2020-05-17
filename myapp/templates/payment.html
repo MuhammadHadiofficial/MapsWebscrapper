@@ -364,6 +364,11 @@ if(
                 });
             },
             onApprove: function (data, actions) {
+   var div = document.createElement("div");
+            div.id = "preloader";
+// div.appendChild(document.createElement())
+            document.getElementById("main").appendChild(div)
+
                 // This function captures the funds from the transaction.
                 return fetch('http://localhost:8000/paypal-checkout/' + data.orderID + "/", {
                     method: 'POST',
@@ -381,7 +386,7 @@ if(
                 }).then(function (details) {
                     if (details.msg == 'success') {
 
-                        alert('Transaction funds captured from ' + details.msg);
+                        // alert('Transaction funds captured from ' + details.msg);
                         window.location = '/success'
                     } else {
                         window.location = '/pay'
