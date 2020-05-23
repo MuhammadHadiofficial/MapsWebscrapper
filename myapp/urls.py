@@ -11,5 +11,7 @@ urlpatterns = [
 
     path('success/', views.successMsg, name="success"),
     path('non/<str:args>/', views.notfound_404),
+    path('pdf_view/', views.ViewPDF.as_view(), name="pdf_view"),
+    path('pdf_download/', views.DownloadPDF.as_view(), name="pdf_download"),
 ]
 

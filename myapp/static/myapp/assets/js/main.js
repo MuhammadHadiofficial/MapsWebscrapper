@@ -190,7 +190,7 @@ document.getElementById('customRange3').addEventListener('input',(e)=>{
     document.getElementById("radiusText").innerText=e.target.value
 })
 
-      document.getElementById('product_input').addEventListener('keypress',(e)=>{
+      document.getElementById('product_input').addEventListener('input',(e)=>{
 
 
           if( e.target.value =='' || document.getElementById('city_input').value==''){
@@ -200,7 +200,7 @@ document.getElementById('customRange3').addEventListener('input',(e)=>{
 
           }
       })
-       document.getElementById('city_input').addEventListener('keypress',(e)=>{
+       document.getElementById('city_input').addEventListener('input',(e)=>{
 
           if(e.target.value=='' || document.getElementById('product_input').value==''){
                 document.getElementById('submit_button').setAttribute('disabled','true')
@@ -225,8 +225,8 @@ we can give you this information
             <h5 id="total-count" data-toggle="counter-up1"  style="display: inline;font-size: 60px;font-weight: bold">1000</h5>
               <i class="fas icofont-location-pin fa-3x"></i>
             <div><h4>Records</h4></div>
-                    <div><h4 id="business-type">Kosmetikstudios</h4></div>
-                    <div><h4 id="business-city">Berlin</h4></div>
+                    <div><h4 id="business-type">${document.getElementById('product_input').value}</h4></div>
+                    <div><h4 id="business-city">${document.getElementById('city_input').value}</h4></div>
                     <div><h4 id="business-radius" style="display:inline;">0</h4>km Radius</div>
             </div>
 
@@ -368,8 +368,8 @@ we can give you this information
               <i class="fas icofont-location-pin fa-3x"></i>
               
             <div><h4>Records</h4></div>
-                    <div><h4 id="business-type">Kosmetikstudios</h4></div>
-                    <div><h4 id="business-city">Berlin</h4></div>
+                    <div><h4 id="business-type">${document.getElementById('product_input').value}</h4></div>
+                    <div><h4 id="business-city">${document.getElementById('city_input').value}</h4></div>
                     <div><h4 id="business-radius" style="display: inline">${radius}</h4>km Radius</div>
             </div>
 

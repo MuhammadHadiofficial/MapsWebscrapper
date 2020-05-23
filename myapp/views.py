@@ -4,10 +4,16 @@ from .scripts import scrapper
 import uuid
 import pandas as pd
 import stripe
-from .models import Business
+from .models import Business,Orders
 # Create your views here.
 from paypalcheckoutsdk.core import PayPalHttpClient, SandboxEnvironment
 from paypalcheckoutsdk.orders import OrdersGetRequest,OrdersCaptureRequest
+
+from io import BytesIO
+from django.http import HttpResponse
+from django.template.loader import get_template
+from django.views import View
+from xhtml2pdf import pisa
 
 # Creating Access Token for Sandbox
 client_id = "AantCxTo8S2RR6e6aRbMV29ZqXwX26bleXFuNq9HmLc2LdAGpxg3SLwKwfypZRutj-6QNoyy1givplZf"
@@ -17,10 +23,101 @@ environment = SandboxEnvironment(client_id=client_id, client_secret=client_secre
 client = PayPalHttpClient(environment)
 
 stripe.api_key='sk_test_TggFaJ2qeD6vxBQAIxetAFnO00d8P2tsGp'
+
+
+
+def render_to_pdf(template_src, context_dict={}):
+    template = get_template(template_src)
+    html = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
+
+
+
+
+# Opens up page as PDF
+class ViewPDF(View):
+
+
+    def get(self, request, *args, **kwargs):
+        data = Orders.objects.get(orderID=request.session['orderID'])
+        charge = int((int(request.session['total']) * 20) / 100)
+        tax = float(charge) * 0.15
+        totalprice = float(charge) + tax
+        print(totalprice)
+        data = {
+            "orderID": data.orderID,
+            "email": data.email,
+            "company_name": data.company_name,
+            "keyword": data.keyword,
+            "city": data.city,
+            "client_name": data.client_name,
+            "amount": data.amount,
+            "tax":tax,
+            "charge":data.net_price,
+            "status": data.status,
+            "address": data.address,
+            "orderDate": data.orderDate,
+            "total":data.total
+        }
+        print(data)
+        pdf = render_to_pdf('pdf_template.html', data)
+        return HttpResponse(pdf, content_type='application/pdf')
+
+
+# Automaticly downloads to PDF file
+class DownloadPDF(View):
+
+    def get(self, request, *args, **kwargs):
+        data = Orders.objects.get(orderID=request.session['orderID'])
+        charge = int((int(request.session['total']) * 20) / 100)
+        tax = float(charge) * 0.15
+        totalprice = float(charge) + tax
+        print(totalprice)
+        data = {
+            "orderID": data.orderID,
+            "email": data.email,
+            "company_name": data.company_name,
+            "keyword": data.keyword,
+            "city": data.city,
+            "client_name": data.client_name,
+            "amount": totalprice,
+            "tax": tax,
+            "charge": data.net_price,
+            "status": data.status,
+            "address": data.address,
+            "orderDate": data.orderDate,
+            "total": data.total
+        }
+
+        pdf = render_to_pdf('pdf_template.html', data)
+
+        response = HttpResponse(pdf, content_type='application/pdf')
+        filename = "Invoice_%s.pdf" % (data['orderID'])
+        content = "attachment; filename='%s'" % (filename)
+        response['Content-Disposition'] = content
+        return response
+import  os
 def index(request):
     # for sesskey in request.session.keys():
     #     print(request.session[sesskey])
     #     del request.session[sesskey]
+    try:
+        os.remove(request.session['filepath'])
+        print("deleted")
+    except FileNotFoundError:
+        return redirect('/')
+
+    except KeyError:
+
+        request.session.flush();
+
+        return render(request, 'index.html')
+
+    request.session.flush();
 
     return render(request,'index.html')
 
@@ -36,8 +133,10 @@ def getData(request):
             print("not found")
     if(request.method=='POST' and request.is_ajax()):
         id = str(uuid.uuid1())
+        request.session['keyword']=str(request.POST.get('product')).lower().strip()
+        request.session['city']=str(request.POST.get('city')).lower().strip()
         data=  Business.objects.filter(keyword=str(request.POST.get('product')).lower().strip(),city= str(request.POST.get('city')).lower().strip(),country='Germany').order_by('name')
-        if(data.count()>10):
+        if(data.count()>0):
             print(data)
             filename = './' + id + '.csv';
             df = []
@@ -87,15 +186,19 @@ def getData(request):
             request.session['filepath'] = file['filename'];
             request.session['payment'] = 'no';
             request.session['total']=file['total']
+
             return JsonResponse({'msg':'success','id':id,'count':file['total'], 'rating_count': file['rating_count'],
                          'phone_count': file['phone_count'], 'email_count':file['email_count'], 'website_count': file['website_count'],
                          'name_count': file['name_count'], 'postalCode_count': file['postalCode_count']});
 
 
 def finalizeCheckout(request,args):
-    amount=int((int(request.session['total'])*20)/100)
-    print(amount)
-    print(request)
+    charge = int((int(request.session['total']) * 20) / 100)
+    tax = float(charge) * 0.15
+    totalprice = float(charge) + tax
+
+
+    print(request.POST)
     if(request.method=='POST' and 'filepath' in request.session.keys() and request.session['payment']!='yes'):
 
         print(args)
@@ -106,10 +209,10 @@ def finalizeCheckout(request,args):
 
         response = client.execute(request2)
 
-        print(int(float(response.result.purchase_units[0].amount.value)))
+        print(float(response.result.purchase_units[0].amount.value))
         if(response.result.status=='APPROVED'):
-            print(int(float(response.result.purchase_units[0].amount.value)))
-            if(amount==int(float(response.result.purchase_units[0].amount.value))):
+            print(float(response.result.purchase_units[0].amount.value))
+            if(totalprice==float(response.result.purchase_units[0].amount.value)):
                 print('Order',response.result.purchase_units[0].amount.value)
                 print('Status Code: ', response.status_code)
                 print('Status: ', response.result.status)
@@ -122,7 +225,12 @@ def finalizeCheckout(request,args):
                     print('Status: ', response.result.status)
                     print('Order ID: ', response.result.id)
 
+                    order_data=Orders(total=request.session['total'],city=request.session['city'],keyword=request.session['keyword'],net_price=charge,amount=totalprice,status=response.result.status,orderID=response.result.id,email=request.POST['email'],address=request.POST['address'],company_name=request.POST['company'],client_name=request.POST['name'])
+
+                    order_data.save()
+
                     request.session['payment'] = 'yes'
+                    request.session['orderID']=response.result.id
                     print(request.session['payment'])
                     return JsonResponse({'msg':'success'})
                 else:
@@ -144,13 +252,13 @@ def getFile(request):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename=' + request.session['id'] + '.csv'
         file.to_csv(path_or_buf=response, sep=';', float_format='%.2f', index=False, decimal=",")
-        import  os
-        try:
-            os.remove(request.session['filepath'])
-            print("deleted")
-        except FileNotFoundError:
-            return redirect('/charge')
-        request.session.flush();
+        # import  os
+        # try:
+        #     os.remove(request.session['filepath'])
+        #     print("deleted")
+        # except FileNotFoundError:
+        #     return redirect('/')
+
         return response
     else:
         return redirect('/non/3')
@@ -159,12 +267,14 @@ def getPay(request):
 
 
         if( 'id' in request.session.keys() and   'filepath' in request.session.keys() and request.session['payment']!='yes'):
-            print(request.session['payment'])
-            return render(request,'payment.html',context={'charge':int((int(request.session['total'])*20)/100),'total':int(request.session['total'])})
+            charge=int((int(request.session['total']) * 20) / 100)
+            tax=float(charge)*0.15
+            totalprice=float(charge)+tax
+            return render(request,'payment.html',context={'totalprice':totalprice,'tax':tax,'charge':int((int(request.session['total'])*20)/100),'total':int(request.session['total'])})
         else:
             return    redirect('non/2')
 def charge(request):
-
+    print(request.POST)
     print(request.session.keys())
     if('filepath' in request.session.keys()):
         amount = int((int(request.session['total']) * 20) / 100)

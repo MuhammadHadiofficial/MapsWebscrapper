@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<!-- saved from url=(0105)https://s3-eu-west-1.amazonaws.com/htmlpdfapi.production/free_html5_invoice_templates/example2/index.html -->
+<html lang="en"><script type="text/javascript" charset="utf-8" id="zm-extension" src="chrome-extension://fdcgdnkidjaadafnichfpabhfomcebme/scripts/webrtc-patch.js" async=""></script><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>Invoice</title>
+<!--    <link rel="stylesheet" href="http://127.0.0.1:8000/static/myapp/assets/style.css" media="all">-->
+	<style>
+@font-face {
+  font-family: SourceSansPro;
+  src: url(SourceSansPro-Regular.ttf);
+}
+
+a {
+  color: #0087C3;
+  text-decoration: none;
+}
+
+body {
+  position: relative;
+  margin: 0 auto;
+  color: #555555;
+  background: #FFFFFF;
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  font-family: SourceSansPro;
+}
+
+header {
+  margin-bottom: 20px;
+border-bottom-width: 1px;
+  border-color:  #AAAAAA;
+  border-bottom-style: solid;
+}
+
+#logo {
+  float: left;
+  margin-top: 8px;
+}
+
+#logo img {
+  height: 70px;
+}
+
+#company {
+  float: right;
+  text-align: right;
+}
+
+
+#client {
+  padding-left: 6px;
+  float: left;
+}
+
+#client .to {
+  color: #777777;
+}
+
+h2.name {
+  font-size: 1em;
+  font-weight: normal;
+  margin: 0;
+}
+
+#invoice {
+  float: right;
+  text-align: right;
+}
+
+#invoice h1 {
+  color: #0087C3;
+  font-size: 2em;
+  line-height: 1em;
+  font-weight: normal;
+}
+
+#invoice .date {
+  font-size: 1.1em;
+  color: #777777;
+}
+
+
+table th,
+table td {
+  background-color: #EEEEEE;
+  text-align: center;
+  padding-top: 5px;
+}
+
+
+
+table td h3{
+  color: #0087C3;
+  font-size: 1.2em;
+  font-weight: normal;
+  margin: 0 0 0.2em 0;
+  text-align: center;
+}
+
+table .total {
+  /*background-color: #57B223;*/
+  color: black;
+}
+thead tr{
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: darkgrey;
+}
+
+
+
+
+table tfoot tr:last-child td {
+  color: #0087C3;
+  font-size: 1.4em;
+
+}
+tfoot td{
+  padding: 10px;
+}
+
+#thanks{
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+#notices{
+  padding-left: 6px;
+}
+
+#notices .notice {
+  font-size: 1.2em;
+}
+th{
+  padding: 10px;
+}
+footer {
+  color: #777777;
+  width: 100%;
+  height: 30px;
+  position: absolute;
+  bottom: 0;
+  padding: 8px 0;
+  text-align: center;
+
+}
+
+
+
+	</style>
+  </head>
+  <body data-gr-c-s-loaded="true" cz-shortcut-listen="true">
+<div id="footer_content">(c) - page <pdf:pagenumber>
+        of <pdf:pagecount>
+    </div>
+    <header class="clearfix">
+      <div id="logo">
+        <img src="./Example 2_files/logo.png">
+      </div>
+      <div id="company">
+        <h2 class="name" style="color: blue">B2B Datenbank</h2>
+        <div>Inhaber: Pascak M. Spaqi</div>
+        <div>Bramfelder Drift 11</div>
+        <div>22175 Hamburg</div>
+        <div>04109-269-0235</div>
+        <div><a href="mailto:info@b2b-datenbank.de">info@b2b-datenbank.de</a></div>
+
+        <div><a href="www.b2b-datenbank.de">www.b2b-datenbank.de</a></div>
+
+    </header>
+    <main>
+      <div id="details" class="clearfix">
+        <div id="client">
+          <div class="to data">INVOICE TO:</div>
+          <h2 class="name">{{client_name}}</h2>
+          <h2 class="name">{{company_name}}</h2>
+
+          <div class="address">{{address}}</div>
+          <div class="email"><a href="{{email}}">{{email}}</a></div>
+        </div>
+        <div id="invoice">
+          <h1>INVOICE {{orderID}}</h1>
+          <div class="date">Date of Invoice: {{orderDate}}</div>
+          <div class="date">Status: {{status}}</div>
+<!--          <div class="date">Due Date: 30/06/2014</div>-->
+        </div>
+      </div>
+      <table  >
+        <thead >
+          <tr >
+            <th  class="no">#</th>
+            <th class="desc">DESCRIPTION</th>
+            <th class="unit">UNIT PRICE</th>
+            <th class="qty">QUANTITY</th>
+            <th class="total">TOTAL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="no">01</td>
+            <td class="desc"><h3>Business Data</h3>{{keyword}} | {{city}} | {{total}}</td>
+            <td class="unit">¢20</td>
+            <td class="qty">{{total}}</td>
+            <td class="total">${{charge}}</td>
+          </tr>
+<!--          <tr>-->
+<!--            <td class="no">02</td>-->
+<!--            <td class="desc"><h3>Website Development</h3>Developing a Content Management System-based Website</td>-->
+<!--            <td class="unit">$40.00</td>-->
+<!--            <td class="qty">80</td>-->
+<!--            <td class="total">$3,200.00</td>-->
+<!--          </tr>-->
+<!--          <tr>-->
+<!--            <td class="no">03</td>-->
+<!--            <td class="desc"><h3>Search Engines Optimization</h3>Optimize the site for search engines (SEO)</td>-->
+<!--            <td class="unit">$40.00</td>-->
+<!--            <td class="qty">20</td>-->
+<!--            <td class="total">$800.00</td>-->
+<!--          </tr>-->
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2"></td>
+            <td style="  padding-top: 10px;" colspan="2">SUBTOTAL</td>
+            <td>${{charge}}</td>
+          </tr>
+          <tr>
+            <td colspan="2"></td>
+            <td colspan="2">TAX 19% {{tax}}</td>
+            <td>{{tax}}</td>
+          </tr>
+          <tr>
+            <td colspan="2"></td>
+            <td colspan="2">GRAND TOTAL</td>
+            <td>{{amount}}</td>
+          </tr>
+        </tfoot>
+      </table>
+      <div style="margin-top: 10px" id="thanks">Thank you!</div>
+      <div id="notices">
+        <div>NOTICE:</div>
+        <div class="notice">A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>
+      </div>
+    </main>
+    <footer>
+      Invoice was created on a computer and is valid without the signature and seal.
+    </footer>
+
+</body></html>
+
+<!--<body>-->
+
+<!--&lt;!&ndash;    &lt;!&ndash; Content for Static Frame 'header_frame' &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;    <div id="header_content">&ndash;&gt;-->
+<!--&lt;!&ndash;    	<h3>Dennnis Ivanov Company</h3>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    &lt;!&ndash; Content for Static Frame 'footer_frame' &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;    <div id="footer_content">(c) - page <pdf:pagenumber>&ndash;&gt;-->
+<!--&lt;!&ndash;        of <pdf:pagecount>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    &lt;!&ndash; HTML Content &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;    <table>&ndash;&gt;-->
+<!--&lt;!&ndash;    		<tr>&ndash;&gt;-->
+<!--&lt;!&ndash;    			<td>{{address}}</td>&ndash;&gt;-->
+<!--&lt;!&ndash;    			<td>{{phone}}</td>&ndash;&gt;-->
+<!--&lt;!&ndash;    		</tr>&ndash;&gt;-->
+<!--&lt;!&ndash;    		<tr>&ndash;&gt;-->
+<!--&lt;!&ndash;    			<td>{{city}} {{state}},</td>&ndash;&gt;-->
+<!--&lt;!&ndash;    			<td>{{email}}</td>&ndash;&gt;-->
+<!--&lt;!&ndash;    		</tr>&ndash;&gt;-->
+<!--&lt;!&ndash;    		<tr>&ndash;&gt;-->
+<!--&lt;!&ndash;    			<td>{{zipcode}}</td>&ndash;&gt;-->
+<!--&lt;!&ndash;    			<td>{{website}}</td>&ndash;&gt;-->
+<!--&lt;!&ndash;    		</tr>&ndash;&gt;-->
+<!--&lt;!&ndash;    </table>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <hr>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <table>&ndash;&gt;-->
+<!--&lt;!&ndash;    	<tr>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    		<th>Product</th>&ndash;&gt;-->
+<!--&lt;!&ndash;    		<th>Price</th>&ndash;&gt;-->
+<!--&lt;!&ndash;    		<th>Quantity</th>&ndash;&gt;-->
+<!--&lt;!&ndash;    		<th>Total</th>&ndash;&gt;-->
+<!--&lt;!&ndash;    	</tr>&ndash;&gt;-->
+<!--&lt;!&ndash;    	<tr>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    		<td>Hosting Plan</td>&ndash;&gt;-->
+<!--&lt;!&ndash;    		<td>$7.99</td>&ndash;&gt;-->
+<!--&lt;!&ndash;    		<td>2</td>&ndash;&gt;-->
+<!--&lt;!&ndash;    		<td>$15.98</td>&ndash;&gt;-->
+<!--&lt;!&ndash;    	</tr>&ndash;&gt;-->
+<!--&lt;!&ndash;    	<tr>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    		<td>consultation </td>&ndash;&gt;-->
+<!--&lt;!&ndash;    		<td>$225</td>&ndash;&gt;-->
+<!--&lt;!&ndash;    		<td>1</td>&ndash;&gt;-->
+<!--&lt;!&ndash;    		<td>$225</td>&ndash;&gt;-->
+<!--&lt;!&ndash;    	</tr>&ndash;&gt;-->
+<!--&lt;!&ndash;    	<tr>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    		<td>Service Hours</td>&ndash;&gt;-->
+<!--&lt;!&ndash;    		<td>$189</td>&ndash;&gt;-->
+<!--&lt;!&ndash;    		<td>45.7</td>&ndash;&gt;-->
+<!--&lt;!&ndash;    		<td>$8637.30</td>&ndash;&gt;-->
+<!--&lt;!&ndash;    	</tr>&ndash;&gt;-->
+<!--&lt;!&ndash;    </table>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <hr>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <p><strong>Total: $8878.28</strong></p>&ndash;&gt;-->
+<!--</body>-->
+<!--</html>-->

@@ -1,7 +1,7 @@
 from django.db import models
 
 from django.db import models
-
+from django.utils import timezone
 
 class Business(models.Model):
     name = models.CharField('name',blank=True, max_length=255,null=True)
@@ -23,3 +23,19 @@ class Business(models.Model):
     class Meta:
         unique_together = [['name', 'industry','city','keyword','postalcode']]
 # Create your models here.
+
+class Orders(models.Model):
+    orderID = models.CharField('orderID',blank=True, max_length=255,null=True)
+    email = models.CharField('email',blank=True,max_length=255,null=True)
+    company_name = models.CharField('company',blank=True,max_length=255,null=True)
+    keyword = models.CharField(blank=True, max_length=255, null=True)
+    city = models.CharField(blank=True, max_length=255, null=True)
+    client_name= models.CharField(blank=True, max_length=255, null=True)
+    amount = models.CharField(blank=True,max_length=255,null=True)
+    net_price = models.CharField(blank=True,max_length=255,null=True)
+    status = models.CharField(blank=True,max_length=255,null=True)
+    address = models.CharField(blank=True,max_length=555,null=True)
+    total = models.IntegerField(blank=True,null=True)
+
+    orderDate = models.DateField(default=timezone.now())
+

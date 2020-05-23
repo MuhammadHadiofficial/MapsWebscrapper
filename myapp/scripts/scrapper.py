@@ -1,38 +1,144 @@
 from django.db import IntegrityError
 from myapp.models import Business
 from datetime import datetime
-from telnetlib import EC
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-from time import sleep
+import  sys
+from multiprocessing import Pool
 
 from urllib3.exceptions import MaxRetryError
+sys.setrecursionlimit(250000000)
+def getDetails(url):
+    city=url['city']
+    keyword=url['keyword']
+    print(url)
+    try:
 
+        country = 'Germany'
+        phone_number = '-'
+        weblink = '-'
+        email = '-'
+        hours = '-'
+        address = '-'
+        street = '-'
+        street_number = '-'
+        postal = '-'
+        area = '-'
+        name = '-'
+        rating = '-'
+        type = '-'
+        street_rec='-'
+        results = requests.get(url['url'], timeout=10)
+        details = results.content
+        detailpage = BeautifulSoup(details, features='html.parser')
+        rating = detailpage.find('div', {'class', 'mod-Bewertungen__gesamt-note'})
+        if (rating):
+            rating = rating.get_text().strip()
+        else:
+            rating = '-'
+        type = detailpage.find('div', {'class', 'mod mod-BranchenUndStichworte'})
+        if (type):
+            type = " ".join(type.get_text().strip().split(','))
+        else:
+            type = '-'
 
-def getData(businessname,city,country,id,radius):
+        name = detailpage.find('h1', {'class', 'mod-TeilnehmerKopf__name'})
+        if (name):
+            name = " ".join(name.get_text().strip().split(','))
 
-    begin_time = datetime.now()
+            # print(name)
+        else:
+            name = '-'
+        street = detailpage.findAll('address', {'class': 'mod-TeilnehmerKopf__adresse'})
 
-    keyword=businessname.lower()
-    city=city.lower()
-    country= country
+        if (street):
+            try:
+                if(street[0].find('span', {"property": "postalCode"})):
+                    postal = street[0].find('span', {"property": "postalCode"}).get_text().strip()
+                else:
+                    postal='-'
+                # print(street[0].find('span', {"property": "streetAddress"}))
+                # print(street[0].find('span', {"property": "postalCode"}))
+                # print(street[0].find('span', {"property": "postalCode"}))
+            except IndexError:
+                postal = '-'
+            except AttributeError:
+                postal = '-'
+
+            streetdata = street[0].findAll('span', {'class', 'mod-TeilnehmerKopf__adresse-daten'})
+            streetpartial=None
+            if (streetdata):
+                street = streetdata[0].get_text().split()
+
+                if( street[len(street) - 1:][0].strip().isalpha() and ( street[len(street) - 1:][0].strip().find('-')!=-1 or street[len(street) - 1:][0].strip().find('.')!=-1)):
+                    print(street[len(street) - 1:][0].strip()+"true")
+
+                street_number = street[len(street) - 1:][0].strip()
+                if( street[len(street) - 1:][0].strip().isalpha()):
+                    print(street[len(street) - 1:][0].strip()+"true")
+                    streetpartial=street[len(street) - 1:][0].strip()
+                    street_number='-'
+
+                street_rec = "".join(street[0:len(street) - 1]).strip()
+                if(streetpartial):
+                    street_rec=street_rec+" "+streetpartial
+                print(street_rec)
+        address = detailpage.findAll('span', {'class', 'mod-TeilnehmerKopf__adresse-daten--noborder'})
+
+        try:
+            area = address[0].get_text().strip()
+        except IndexError:
+            area = '-'
+        phone_number = detailpage.find("span", {"data-role": 'telefonnummer'})
+        if (phone_number):
+            phone_number = phone_number.get_text().strip()
+        else:
+            phone_number = '-'
+        email = detailpage.find("a", {"property": 'email'})
+        if (email):
+            email = email.get_text().strip()
+        else:
+            email = '-'
+        weblink = detailpage.find("a", {"property": 'url'})
+        if (weblink):
+            weblink = weblink.get_text().strip()
+        else:
+            weblink = '-'
+
+        try:
+            business=Business(keyword=keyword,name=name,rating=rating,industry=type,street=street_rec,street_number=street_number,postalcode=postal,area=area,city=city,country=country,opening_hours=hours,phone_number=phone_number,website=weblink,email=email,)
+            business.save()
+            # print( rating, type,street,street_number,postal,area,city,country,hours, phone_number, weblink,email)
+            return (name, rating, type, street_rec, street_number, postal, area, city, country, hours, phone_number, weblink, email)
+
+        except IntegrityError as e:
+            print('duplicate')
+            return None
+        print("record ends")
+    except requests.exceptions.ReadTimeout:
+        print('timeout')
+        return None
+    except requests.exceptions.ConnectionError:
+        return None
+    return None
+
+def getData(businessname, city, country, id, radius):
+    keyword = businessname.lower()
+    city = city.lower()
+    country = country
     d = []
-    end_result_count=0
-    total=0
-    # https://www.yellowpages.com/search?search_terms=salon&geo_location_terms=Berlin
-
+    total = 0
     check_next = True
-    print(radius)
-    if(int(radius)==0):
-        url = "https://www.gelbeseiten.de/Suche/"+keyword+"/"+city
+
+    if (int(radius) == 0):
+        url = "https://www.gelbeseiten.de/Suche/" + keyword + "/" + city
     else:
-        url = "https://www.gelbeseiten.de/Suche/"+keyword+"/"+city.strip()+"?umkreis="+str(int(radius)*1000)
-    results=''
+        url = "https://www.gelbeseiten.de/Suche/" + keyword + "/" + city.strip() + "?umkreis=" + str(int(radius) * 1000)
+
     while check_next:
 
         try:
-
             results = requests.get(url)
             print(url)
         except requests.exceptions.ConnectionError:
@@ -43,93 +149,27 @@ def getData(businessname,city,country,id,radius):
             # sleep(2)
             print('jell')
             continue
-        print(results.status_code)
         c = results.content
         # from bs4 import BeautifulSoup
         soup = BeautifulSoup(c, features='html.parser')
         samples = soup.findAll("article", {"class": "mod mod-Treffer"})
-
+        url = []
         for s in samples:
-            data = s.findAll('h2')
-            print(data)
-            name=data[0].get_text().strip()
-            type = s.findAll('p', {"class": "d-inline-block mod-Treffer--besteBranche"})
-            type=type[0].get_text().strip()
-            rating = s.findAll('span', {"class": "mod-Stars__text"})
-            if (rating):
-                print(rating)
-                rating=rating[0].get_text().strip()
-            else:
-                rating="-"
-            # desc = s.findAll('div', {"class": "mod-Treffer__freitext"})
-            # # if (desc):
-            #     # print(desc[0].get_text().strip())
-            address = s.findAll('address', {"class": "mod mod-AdresseKompakt"})
-
-
-            phone_number = s.findAll('p', {"class": "mod-AdresseKompakt__phoneNumber"})
-            if (phone_number):
-                phone_number=phone_number[0].get_text()
-            status = s.findAll('div', {"class": "oeffnungszeit_kompakt__zustandsinfo--geschlossen"})
-
-            weblink = s.findAll("a", {"class": 'contains-icon-homepage'})
-            if (weblink):
-                weblink = weblink[0]['href']
-            else:
-                weblink="-"
-            email = s.findAll("a", {"class": 'contains-icon-email gs-btn'})
-
-            if (email):
-                email=email[0]['href']
-            else:
-                email="-"
-            hours=''
-            status = s.findAll('div', {"class": "oeffnungszeit_kompakt__zustandsinfo--geschlossen"})
-            if (status):
-                hours=status[0].findAll('span', {"class": 'nobr'})[0].get_text()
-
-            else:
-                status = s.findAll('div', {"class": "oeffnungszeit_kompakt__zustandsinfo--geoeffnet"})
-                if(status):
-                    hours=status[0].findAll('span', {"class": 'nobr'})[0].get_text()
-                else:
-                    hours = '-'
-            if (address):
-                address = address[0].findAll('p')[0].get_text().split(sep=',')
-            else:
-                address="-"
-            street=''
-            street_number=''
-            postal=''
-            area=''
-            try:
-                addresstmp = address[0].split()
-                street=" ".join(addresstmp[0:len(addresstmp)-1])
-                street_number=addresstmp[len(addresstmp)-1]
-
-            except IndexError:
-                pass
-            try:
-                addresstmp = address[1].split()
-                postal=addresstmp[0]
-                area=addresstmp[1]
-            except IndexError:
-                pass
             try:
                 detail = s.findAll("a", {"class": 'gs-btn'})[0].attrs
-                print(detail['href'])
+                url.append({'city':city,'keyword':keyword,'url':detail['href']})
             except IndexError:
-                detail='-'
-                print("index out")
-            try:
-                business=Business(keyword=keyword,name=name,rating=rating,industry=type,street=street,street_number=street_number,postalcode=postal,area=area,city=city,country=country,opening_hours=hours,phone_number=phone_number,website=weblink,email=email,)
-                business.save()
-
-                d.append((name, rating, type,street,street_number,postal,area,city,country,hours, phone_number, weblink,email))
-                total=total+1
-            except IntegrityError as e:
-                print('duplicate')
                 continue
+        p = Pool(20)
+        a = p.map(getDetails, url)
+        p.terminate()
+        p.join()
+        print("next Iteration")
+        for row in a:
+            total = total + 1
+            # print(row)
+            if (row):
+                d.append(row)
 
         next = soup.find("a", {"class", "gs_paginierung__sprungmarke gs_paginierung__sprungmarke--vor btn btn-default"})
         if (next):
@@ -139,14 +179,12 @@ def getData(businessname,city,country,id,radius):
         else:
             check_next = False
     dataFrame = pd.DataFrame(d, columns=(
-        'Firmenname / COMPANY NAME', 'rating', 'Branche / INDUSTRY','Strasse / Street','Strasse no',"PostalCode","Area" ,'Stadt / City','Land / COUNTRY','HOURS', 'phone_number', 'website','email'))
-    dd=dataFrame.sort_values(by=['Firmenname / COMPANY NAME'])
-    filename='./'+id+'.csv';
+        'Firmenname / COMPANY NAME', 'rating', 'Branche / INDUSTRY', 'Strasse / Street', 'Strasse no', "PostalCode",
+        "Area", 'Stadt / City', 'Land / COUNTRY', 'HOURS', 'phone_number', 'website', 'email'))
+    dd = dataFrame.sort_values(by=['Firmenname / COMPANY NAME'])
+    filename = './' + str(id) + '.csv';
     dd = dd.reset_index(drop=True)
-    # dataFrame.to_csv('./myfile.csv')
     dd.to_csv(filename)
-
-
 
     rating_count = dataFrame[dataFrame['rating'] != '-'].count()[0]
     phone_count = dataFrame[dataFrame['phone_number'] != '-'].count()[0]
@@ -157,10 +195,12 @@ def getData(businessname,city,country,id,radius):
     postalCode_count = dataFrame[dataFrame['PostalCode'] != '-'].count()[0]
     print(total)
     print(filename)
-    return {'filename':filename,'total':total, 'rating_count': str(rating_count),
-                         'phone_count': str(phone_count), 'email_count': str(email_count), 'website_count': str(website_count),
-                         'name_count': str(name_count), 'postalCode_count': str(postalCode_count)}
+    if (total > 0):
+        dd.to_csv(filename)
 
+    return {'filename': filename, 'total': total, 'rating_count': str(rating_count),
+            'phone_count': str(phone_count), 'email_count': str(email_count), 'website_count': str(website_count),
+            'name_count': str(name_count), 'postalCode_count': str(postalCode_count)}
 # from django.db import IntegrityError
 # from myapp.models import Business
 # from datetime import datetime

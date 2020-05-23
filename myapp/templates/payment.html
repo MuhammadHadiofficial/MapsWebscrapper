@@ -106,9 +106,17 @@
                             <span class="text-muted">    {{charge}} $
 </span>
                         </li>
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                            <div>
+                                <h6 class="my-0">19% tax </h6>
+                                <small class="text-muted">{{ charge }}$ + {{tax}}$  </small>
+                            </div>
+                            <span class="text-muted">    {{totalprice}} $
+</span>
+                        </li>
                         <li class="list-group-item d-flex justify-content-between">
                             <span>Total (USD)</span>
-                            <strong> {{charge}} $</strong>
+                            <strong> {{totalprice}} $</strong>
                         </li>
                     </ul>
                 </div>
@@ -130,93 +138,65 @@
 <input type="hidden" name="Payment[gdprAgreement]" value="0"><label class="form-checkbox"><input type="checkbox" id="payment-gdpragreement" class="form-checkbox-input" name="Payment[gdprAgreement]" value="1" _checkout-privacy-fields="" aria-invalid="true"> <span class="form-checkbox-checkmark text-justify">Ich habe die <a href="/datenschutz-einwilligungserklaerung" target="_blank">Datenschutzerklärung</a> zur Kenntnis ge­nommen und erkläre mich damit ein­verstanden, dass die von mir einge­gebenen Daten elektronisch über­mittelt, er­hoben und ge­speichert werden. Ins­besondere habe ich zur Kenntnis genommen, dass zur Er­füllung des Ver­trages die Links zu den von mir aus­gewählten Social-Media-Inhalten an Unter­auftrag­nehmer in Länder außer­halb der Euro­päischen Union bzw. des Euro­päischen Wirtschafts­raumes übermittelt werden, so dass hierfür ein an­gemessenes Datenschutz­niveau nicht ge­währleistet werden kann. Dadurch be­steht ein erhöhtes Risiko der Ver­arbeitung dieser Daten entgegen den datenschutz­rechtlichen Vor­gaben der DSGVO und des BDSG. Ich habe die Einzel­heiten hier­zu in der <a href="/datenschutz-einwilligungserklaerung" target="_blank">Datenschutzerklärung</a> zur Kenntnis genommen und willige aus­drücklich in eine derartige Er­hebung, Speicherung und Ver­arbeitung ein­schließlich Über­mittlung ein.</span></label>
 
 <div class="form-error checkout-checkbox-error">Sie müssen die Datenschutzerklärung akzeptieren.</div>
-</div>                        <div class="form-group form-checkbox-group field-payment-newsletteragreement">
-
-<input type="hidden" name="Payment[newsletterAgreement]" value="0"><label class="form-checkbox"><input type="checkbox" id="payment-newsletteragreement" class="form-checkbox-input" name="Payment[newsletterAgreement]" value="1"> <span class="form-checkbox-checkmark text-justify">Ich möchte den Newsletter erhalten und von exklusiven Gutscheinen profitieren.</span></label>
-
-
-</div>                                                    <div class="checkout-note"><span class="text-bold"></span></div>
+</div>                                                     <div class="checkout-note"><span class="text-bold"></span></div>
 <!--                                                <button type="submit" class="btn checkout-btn-primary wide loading disabled" _checkout-submit="">Weiter zur Bezahlung</button>                    -->
                 </div>
                 </div>
 
                 <div class="col-md-5 order-md-1">
 
+                    <form class="needs-validation" novalidate="" action="/charge" method="post" id="payment-form">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="email">Email <span class="text-muted">(Optional)</span></label>
+                            <input type="email" class="form-control" name="email" id="email"
+                                   placeholder="you@example.com">
+                            <div class="invalid-feedback">
+                                Please enter a valid email address for shipping updates.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="address">Address</label>
+                            <input type="text" class="form-control" id="address" name="address"
+                                   placeholder="1234 Main St" required="">
+                            <div class="invalid-feedback">
+                                Please enter your shipping address.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
+                            <input type="text" class="form-control" id="address2" name="address2"
+                                   placeholder="Apartment or suite">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="cc-name">Name on card</label>
+                                <input type="text" class="form-control" id="cc-name" name="name" placeholder=""
+                                       required="">
+                                <small class="text-muted">Full name as displayed on card</small>
+                                <div class="invalid-feedback">
+                                    Name on card is required
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="cc-name">Company Name</label>
+                                <input type="text" class="form-control" id="company" name="company" placeholder=""
+                                       required="">
+                                <small class="text-muted">Company name </small>
+                                <div class="invalid-feedback">
+                                   Compnay Name on card is required
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="mb-4">
+
                     <div class="container">
                         <div id="paypal-button-container"></div>
 
 <!--                        <p class="subtitle fancy"><span style="font-size: 50px">OR</span></p>-->
                     </div>
-<!--                    <form class="needs-validation" novalidate="" action="/charge" method="post" id="payment-form">-->
-<!--                        {% csrf_token %}-->
-<!--                        <div class="mb-3">-->
-<!--                            <label for="email">Email <span class="text-muted">(Optional)</span></label>-->
-<!--                            <input type="email" class="form-control" name="email" id="email"-->
-<!--                                   placeholder="you@example.com">-->
-<!--                            <div class="invalid-feedback">-->
-<!--                                Please enter a valid email address for shipping updates.-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="mb-3">-->
-<!--                            <label for="address">Address</label>-->
-<!--                            <input type="text" class="form-control" id="address" name="address"-->
-<!--                                   placeholder="1234 Main St" required="">-->
-<!--                            <div class="invalid-feedback">-->
-<!--                                Please enter your shipping address.-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="mb-3">-->
-<!--                            <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>-->
-<!--                            <input type="text" class="form-control" id="address2" name="address2"-->
-<!--                                   placeholder="Apartment or suite">-->
-<!--                        </div>-->
-<!--                        <h4 class="mb-3">Payment</h4>-->
-<!--                        <div class="d-block my-3">-->
-<!--                            <div class="custom-control custom-radio">-->
-<!--                                <input id="credit" name="paymentMethod" type="radio" class="custom-control-input"-->
-<!--                                       checked="" required="">-->
-<!--                                <label class="custom-control-label" for="credit">Credit card</label>-->
-<!--                            </div>-->
-<!--                            <div class="custom-control custom-radio">-->
-<!--                                <input id="debit" name="paymentMethod" type="radio" class="custom-control-input"-->
-<!--                                       required="">-->
-<!--                                <label class="custom-control-label" for="debit">Debit card</label>-->
-<!--                            </div>-->
-<!--                            <div class="custom-control custom-radio">-->
-<!--                                <input id="paypal" name="paymentMethod" type="radio" class="custom-control-input"-->
-<!--                                       required="">-->
-<!--                                <label class="custom-control-label" for="paypal">Paypal</label>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="row">-->
-<!--                            <div class="col-md-6 mb-3">-->
-<!--                                <label for="cc-name">Name on card</label>-->
-<!--                                <input type="text" class="form-control" id="cc-name" name="name" placeholder=""-->
-<!--                                       required="">-->
-<!--                                <small class="text-muted">Full name as displayed on card</small>-->
-<!--                                <div class="invalid-feedback">-->
-<!--                                    Name on card is required-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="col-md-6 mb-3">-->
-<!--                                <div class="form-row">-->
-<!--                                    <label for="card-element">-->
-<!--                                        Credit or debit card-->
-<!--                                    </label>-->
-<!--                                    <div id="card-element">-->
-<!--                                        &lt;!&ndash; A Stripe Element will be inserted here. &ndash;&gt;-->
-<!--                                    </div>-->
-
-<!--                                    &lt;!&ndash; Used to display form errors. &ndash;&gt;-->
-<!--                                    <div id="card-errors" role="alert"></div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <hr class="mb-4">-->
-<!--                        <button id="checkout" class="btn btn-primary btn-lg btn-block" type="submit">Continue to-->
-<!--                            checkout-->
-<!--                        </button>-->
-<!--                    </form>-->
+                    </form>
                 </div>
             </div>
         </div>
@@ -224,7 +204,18 @@
 
     </section>
     <script>
+    function validate(val1,val2,val3,val4,val5) {
+         console.log(val1,val2,val3,val4,val5)
+if(!val1 && !val2 && !val3 && !val4 && !val5){
+
+    return true
+}else{
+    console.log(false)
+    return false
+}
+    }
         // using jQuery
+
         function getCookie(name) {
             var cookieValue = null;
             if (document.cookie && document.cookie != '') {
@@ -246,39 +237,90 @@
 
                 // Disable the buttons
                 actions.disable();
+                var error=true;
+                var namedError=true;
+                var addressError=true
+                var companyError=true
+                var checkboxError=true
+                const email = document.getElementById("email");
+              const address = document.getElementById("address");
+              const address2 = document.getElementById("address2");
+              const name = document.getElementById("cc-name");
+const company = document.getElementById("company");
 
-                // Listen for changes to the checkbox
-                // document.querySelector('#payment-newsletteragreement')
-                //     .addEventListener('change', function (event) {
-                //     if(
-                // document.querySelector('#payment-deliveryagreement').checked &&
-                // document.querySelector('#payment-gdpragreement').checked && document.querySelector('#payment-termsandconditionagreement').checked && event.target.checked){
-                //                actions.enable()
-                //                 console.log('check')
-                //            }else {
-                //
-                //             actions.disable();
-                //            }
-                //         // Enable or disable the button when it is checked or unchecked
-                //         if (event.target.checked) {
-                //
-                //             document.querySelector('.field-payment-termsandconditionagreement .form-error').style.display='none'
-                //
-                //         } else {
-                //             document.querySelector('.field-payment-termsandconditionagreement .form-error').style.display='inline-block'
-                //
-                //             actions.disable();
-                //         }
-                //     })
-                // Listen for changes to the checkbox
+company.addEventListener("input", function (event) {
+console.log(event)
+if(company.value.trim().length<5){
+    companyError=true
+actions.disable()
+
+if(    validate(namedError,companyError,error,addressError,checkboxError))
+    actions.enable()
+
+}else{
+    companyError=false
+
+if(    validate(namedError,companyError,error,addressError,checkboxError))
+    actions.enable()
+
+}
+})
+
+address.addEventListener("input", function (event) {
+console.log(event)
+if(address.value.trim().length<5){
+    addressError=true
+actions.disable()
+
+if(    validate(namedError,companyError,error,addressError,checkboxError))
+    actions.enable()
+
+}else{
+    addressError=false
+
+if(    validate(namedError,companyError,error,addressError,checkboxError))
+    actions.enable()
+}
+})
+
+name.addEventListener("input", function (event) {
+console.log(event)
+if(name.value.trim().length<5){
+    namedError=true
+    actions.disable()
+
+}else{
+    namedError=false
+if(    validate(namedError,companyError,error,addressError,checkboxError))
+    actions.enable()
+
+}
+})
+
+email.addEventListener("input", function (event) {
+console.log(event)
+  if (email.validity.typeMismatch || email.value.length<5) {
+      error=true
+actions.disable()
+    email.setCustomValidity("I am expecting an e-mail address!");
+  } else {
+      error=false
+
+if(    validate(namedError,companyError,error,addressError,checkboxError))
+    actions.enable()
+    email.setCustomValidity("");
+  }
+});
+
+
                 document.querySelector('#payment-gdpragreement')
                     .addEventListener('change', function (event) {
-if(
-                document.querySelector('#payment-deliveryagreement').checked  && document.querySelector('#payment-termsandconditionagreement').checked && event.target.checked){
+if(document.querySelector('#payment-deliveryagreement').checked  && document.querySelector('#payment-termsandconditionagreement').checked && event.target.checked){
                                 console.log('check')
-    actions.enable()
+    checkboxError=false
+    if(validate(namedError,companyError,error,addressError,checkboxError)) actions.enable()
                            }else {
-
+checkboxError=true
                             actions.disable();
                            }
                         // Enable or disable the button when it is checked or unchecked
@@ -293,6 +335,7 @@ if(
                            document.querySelector('.field-payment-gdpragreement .form-error').style.display='inline-block'
 
                 document.querySelector('.field-payment-gdpragreement').classList.add('has-error')
+                       checkboxError=true
                             actions.disable();
                         }
                     })
@@ -302,9 +345,10 @@ if(
 if(
                 document.querySelector('#payment-gdpragreement').checked  && document.querySelector('#payment-termsandconditionagreement').checked && event.target.checked){
                                 console.log('check')
-    actions.enable()
-                           }else {
-
+    checkboxError=false
+    if(validate(namedError,companyError,error,addressError,checkboxError))actions.enable()
+                                }else {
+checkboxError=true
                             actions.disable();
                            }
                         // Enable or disable the button when it is checked or unchecked
@@ -318,7 +362,7 @@ if(
                            document.querySelector('.field-payment-deliveryagreement .form-error').style.display='inline-block'
 
                 document.querySelector('.field-payment-deliveryagreement').classList.add('has-error')
-
+checkboxError=true
                             actions.disable();
                         }
                     })
@@ -327,10 +371,10 @@ if(
                     .addEventListener('change', function (event) {
 if(
                 document.querySelector('#payment-gdpragreement').checked  && document.querySelector('#payment-deliveryagreement').checked && event.target.checked){
-    actions.enable()
-    console.log('check')
-                           }else {
-
+    checkboxError=false
+    if(validate(namedError,companyError,error,addressError,checkboxError))actions.enable()
+                               }else {
+checkboxError=true
                             actions.disable();
                            }
                         // Enable or disable the button when it is checked or unchecked
@@ -346,7 +390,7 @@ if(
                            document.querySelector('.field-payment-termsandconditionagreement .form-error').style.display='inline-block'
 
                 document.querySelector('.field-payment-termsandconditionagreement').classList.add('has-error')
-
+checkboxError=true
                             actions.disable();
                         }
                     });
@@ -358,40 +402,70 @@ if(
                 return actions.order.create({
                     purchase_units: [{
                         amount: {
-                            value: '{{charge}}'
+                            value: '{{totalprice}}'
                         }
                     }]
                 });
             },
             onApprove: function (data, actions) {
-   var div = document.createElement("div");
-            div.id = "preloader";
-// div.appendChild(document.createElement())
-            document.getElementById("main").appendChild(div)
+                var div = document.createElement("div");
+                div.id = "preloader";
+                document.getElementById("main").appendChild(div)
 
                 // This function captures the funds from the transaction.
-                return fetch('paypal-checkout/' + data.orderID + "/", {
-                    method: 'POST',
-                    headers: {
+                alert(document.getElementById('email').value)
+                alert(document.getElementById('address').value)
+                alert(document.getElementById('address2').value)
+                alert(document.getElementById('cc-name').value)
+                return $.ajax({
+                    url: 'paypal-checkout/' + data.orderID + "/",
+                    data: {'email': document.getElementById('email').value, 'address': document.getElementById('address').value,'company': document.getElementById('company').value, 'address2': document.getElementById('address2').value, 'name': document.getElementById('cc-name').value},
+                    dataType: 'json',
+                    method: 'post',
+                    error: function (err) {
 
-                        "X-CSRFToken": getCookie("csrftoken"),
-                        "Accept": "application/json",
-                        "Content-Type": "application/json"
+
                     },
-                    body: JSON.stringify({
-                        orderid: data.orderID
-                    })
-                }).then(function (res) {
-                    return res.json();
-                }).then(function (details) {
-                    if (details.msg == 'success') {
+                    success: function (data) {
 
-                        // alert('Transaction funds captured from ' + details.msg);
-                        window.location = '/success'
-                    } else {
-                        window.location = '/pay'
-                    }
-                })
+                //
+                        if (data.msg == 'success') {
+ window.location = '/success'
+
+                        } else {
+
+                                    window.location = '/pay'
+
+                        }
+
+                    },
+
+                });
+
+                //             return fetch('paypal-checkout/' + data.orderID + "/", {
+                //                 method: 'POST',
+                //                 headers: {
+                //
+                //                     "X-CSRFToken": getCookie("csrftoken"),
+                //                     "Accept": "application/json",
+                //                     "Content-Type": "application/json"
+                //                 },
+                //                 body: JSON.stringify({ "user": {
+                //   "email" : "as",
+                //   "password" : "SA"
+                // }}),
+                //             }).then(function (res) {
+                //                 return res.json();
+                //             }).then(function (details) {
+                //                 if (details.msg == 'success') {
+                //
+                //                     // alert('Transaction funds captured from ' + details.msg);
+                //                     window.location = '/success'
+                //                 } else {
+                //                     window.location = '/pay'
+                //                 }
+                //             })
+
             }
         }).render('#paypal-button-container');
         //This function displays Smart Payment Buttons on your web page.
