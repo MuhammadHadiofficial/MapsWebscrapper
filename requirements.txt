@@ -5,3 +5,4 @@ stripe
 django
 bs4
 paypalrestsdk
+xhtml2pdf

@@ -109,14 +109,11 @@ def index(request):
         os.remove(request.session['filepath'])
         print("deleted")
     except FileNotFoundError:
-        return redirect('/')
+        print("not found")
+
 
     except KeyError:
-
-        request.session.flush();
-
-        return render(request, 'index.html')
-
+        print("keyerror")
     request.session.flush();
 
     return render(request,'index.html')
