@@ -105,15 +105,15 @@ def index(request):
     # for sesskey in request.session.keys():
     #     print(request.session[sesskey])
     #     del request.session[sesskey]
-    try:
-        os.remove(request.session['filepath'])
-        print("deleted")
-    except FileNotFoundError:
-        print("not found")
-
-
-    except KeyError:
-        print("keyerror")
+    # try:
+    #     os.remove(request.session['filepath'])
+    #     print("deleted")
+    # except FileNotFoundError:
+    #     print("not found")
+    #
+    #
+    # except KeyError:
+    #     print("keyerror")
     request.session.flush();
 
     return render(request,'index.html')
