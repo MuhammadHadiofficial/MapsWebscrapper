@@ -20,8 +20,8 @@ class Business(models.Model):
     website=models.CharField(blank=True,max_length=255,null=True)
     keyword=models.CharField(blank=True,max_length=255,null=True)
     email=models.CharField(blank=True,max_length=255,null=True)
-    class Meta:
-        unique_together = [['name', 'industry','city','keyword','postalcode']]
+    # class Meta:
+    #     unique_together = [['name']]
 # Create your models here.
 
 class Orders(models.Model):

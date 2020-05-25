@@ -1,4 +1,5 @@
 
+
 pandas
 django-cors-headers
 stripe
@@ -6,3 +7,4 @@ django
 bs4
 paypalrestsdk
 xhtml2pdf
+paypal-checkout-serversdk

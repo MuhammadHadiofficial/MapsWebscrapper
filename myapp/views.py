@@ -105,15 +105,15 @@ def index(request):
     # for sesskey in request.session.keys():
     #     print(request.session[sesskey])
     #     del request.session[sesskey]
-    # try:
-    #     os.remove(request.session['filepath'])
-    #     print("deleted")
-    # except FileNotFoundError:
-    #     print("not found")
-    #
-    #
-    # except KeyError:
-    #     print("keyerror")
+    try:
+        os.remove(request.session['filepath'])
+        print("deleted")
+    except FileNotFoundError:
+        print("not found")
+
+
+    except KeyError:
+        print("keyerror")
     request.session.flush();
 
     return render(request,'index.html')
@@ -146,16 +146,15 @@ def getData(request):
                 street_number=d.street_number
                 city=d.city
                 country=d.country
-                openinghours=d.opening_hours;
                 phonenumber=d.phone_number;
                 weblink=d.website;
                 email=d.email
                 postalCode=d.postalcode
                 area=d.area
-                df.append((name,rating,details,street,street_number,postalCode,area,city,country,openinghours,phonenumber,weblink,email))
+                df.append((name,rating,details,street,street_number,postalCode,area,city,country,phonenumber,weblink,email))
             dataFrame = pd.DataFrame(df, columns=(
                 'Firmenname / COMPANY NAME', 'rating', 'Branche / INDUSTRY', 'Strasse / Street','Strasse no',"PostalCode","Area",
-                'Stadt / City', 'Land / COUNTRY', 'HOURS', 'phone_number', 'website','email'))
+                'Stadt / City', 'Land / COUNTRY', 'phone_number', 'website','email'))
             dataFrame=dataFrame.reset_index(drop=True)
             dataFrame.to_csv(filename)
 
