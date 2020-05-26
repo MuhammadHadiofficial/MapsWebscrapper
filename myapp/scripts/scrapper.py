@@ -4,14 +4,17 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-import  sys
+import sys
 from multiprocessing import Pool
 
 from urllib3.exceptions import MaxRetryError
+
 sys.setrecursionlimit(250000000)
+
+
 def getDetails(url):
-    city=url['city']
-    keyword=url['keyword']
+    city = url['city']
+    keyword = url['keyword']
     print(url)
     try:
 
@@ -28,8 +31,8 @@ def getDetails(url):
         name = '-'
         rating = '-'
         type = '-'
-        street_rec='-'
-        results = requests.get(url['url'],timeout=20)
+        street_rec = '-'
+        results = requests.get(url['url'], timeout=20)
         details = results.content
         detailpage = BeautifulSoup(details, features='html.parser')
         rating = detailpage.find('div', {'class', 'mod-Bewertungen__gesamt-note'})
@@ -54,10 +57,10 @@ def getDetails(url):
 
         if (street):
             try:
-                if(street[0].find('span', {"property": "postalCode"})):
+                if (street[0].find('span', {"property": "postalCode"})):
                     postal = street[0].find('span', {"property": "postalCode"}).get_text().strip()
                 else:
-                    postal='-'
+                    postal = '-'
                 # print(street[0].find('span', {"property": "streetAddress"}))
                 # print(street[0].find('span', {"property": "postalCode"}))
                 # print(street[0].find('span', {"property": "postalCode"}))
@@ -67,7 +70,7 @@ def getDetails(url):
                 postal = '-'
 
             streetdata = street[0].findAll('span', {'class', 'mod-TeilnehmerKopf__adresse-daten'})
-            streetpartial=None
+            streetpartial = None
             if (streetdata):
                 street = streetdata[0].get_text().split()
                 #
@@ -75,14 +78,14 @@ def getDetails(url):
                 #     # print(street[len(street) - 1:][0].strip()+"true")
 
                 street_number = street[len(street) - 1:][0].strip()
-                if( street[len(street) - 1:][0].strip().isalpha()):
+                if (street[len(street) - 1:][0].strip().isalpha()):
                     # print(street[len(street) - 1:][0].strip()+"true")
-                    streetpartial=street[len(street) - 1:][0].strip()
-                    street_number='-'
+                    streetpartial = street[len(street) - 1:][0].strip()
+                    street_number = '-'
 
                 street_rec = "".join(street[0:len(street) - 1]).strip()
-                if(streetpartial):
-                    street_rec=street_rec+" "+streetpartial
+                if (streetpartial):
+                    street_rec = street_rec + " " + streetpartial
                 # print(street_rec)
         address = detailpage.findAll('span', {'class', 'mod-TeilnehmerKopf__adresse-daten--noborder'})
 
@@ -105,19 +108,9 @@ def getDetails(url):
             weblink = weblink.get_text().strip()
         else:
             weblink = '-'
+        return (
+        name, rating, type, street_rec, street_number, postal, area, city, country, phone_number, weblink, email)
 
-        try:
-
-            business=Business(keyword=keyword,name=name,rating=rating,industry=type,street=street_rec,street_number=street_number,postalcode=postal,area=area,city=city,country=country,opening_hours=hours,phone_number=phone_number,website=weblink,email=email,)
-            business.save()
-            print( rating, type,street,street_number,postal,area,city,country,hours, phone_number, weblink,email)
-            return (name, rating, type, street_rec, street_number, postal, area, city, country, phone_number, weblink, email)
-
-        except IntegrityError as e:
-            print('duplicate')
-            print(rating, type, street, street_number, postal, area, city, country, hours, phone_number, weblink, email)
-
-            return None
         print("record ends")
     except requests.exceptions.ReadTimeout:
         print('timeout')
@@ -125,6 +118,7 @@ def getDetails(url):
     except requests.exceptions.ConnectionError:
         return None
     return None
+
 
 def getData(businessname, city, country, id, radius):
     keyword = businessname.lower()
@@ -160,7 +154,7 @@ def getData(businessname, city, country, id, radius):
         for s in samples:
             try:
                 detail = s.findAll("a", {"class": 'gs-btn'})[0].attrs
-                url.append({'city':city,'keyword':keyword,'url':detail['href']})
+                url.append({'city': city, 'keyword': keyword, 'url': detail['href']})
             except IndexError:
                 continue
         p = Pool(20)
@@ -172,6 +166,24 @@ def getData(businessname, city, country, id, radius):
             # print(row)
             if (row):
                 total = total + 1
+
+                try:
+                    # (name, rating, type, street_rec, street_number, postal, area, city, country, phone_number, weblink,
+                    #  email)
+
+                    business = Business(keyword=keyword, name=row[0], rating=row[1], industry=row[2], street=row[3],
+                                        street_number=row[4], postalcode=row[5], area=row[6], city=row[7],
+                                        country=row[8], opening_hours='-', phone_number=row[9],
+                                        website=row[10], email=row[11], )
+                    business.save()
+                    print(row)
+
+                except IntegrityError as e:
+                    print('duplicate')
+                    # print(rating, type, street, street_number, postal, area, city, country, hours, phone_number,
+                    #       weblink, email)
+                    print(row)
+                    return None
                 d.append(row)
 
         next = soup.find("a", {"class", "gs_paginierung__sprungmarke gs_paginierung__sprungmarke--vor btn btn-default"})

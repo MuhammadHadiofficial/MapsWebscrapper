@@ -199,9 +199,9 @@ footer {
           <tr>
             <td class="no">01</td>
             <td class="desc"><h3>Business Data</h3>{{keyword}} | {{city}} | {{total}}</td>
-            <td class="unit">¢20</td>
-            <td class="qty">{{total}}</td>
-            <td class="total">${{charge}}</td>
+            <td class="unit">&cent; 20</td>
+            <td class="qty">{{total}} </td>
+            <td class="total">{{charge}}	&euro;</td>
           </tr>
 <!--          <tr>-->
 <!--            <td class="no">02</td>-->
@@ -222,17 +222,17 @@ footer {
           <tr>
             <td colspan="2"></td>
             <td style="  padding-top: 10px;" colspan="2">SUBTOTAL</td>
-            <td>${{charge}}</td>
+            <td>{{charge}} 	&euro;</td>
           </tr>
           <tr>
             <td colspan="2"></td>
             <td colspan="2">TAX 19% {{tax}}</td>
-            <td>{{tax}}</td>
+            <td>{{tax}} 	&euro;</td>
           </tr>
           <tr>
             <td colspan="2"></td>
             <td colspan="2">GRAND TOTAL</td>
-            <td>{{amount}}</td>
+            <td>{{amount}} 	&euro;</td>
           </tr>
         </tfoot>
       </table>
